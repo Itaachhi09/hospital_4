@@ -20,7 +20,7 @@ require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
-$conn = require __DIR__ . '/../config/database.php';
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 if (!$conn || $conn->connect_error) {
     http_response_code(503);

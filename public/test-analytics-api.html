@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #2563eb;
+            background: #f9f9f9;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .response {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analytics API Test Suite</h1>
+        
+        <div class="test-section">
+            <h2>Authentication</h2>
+            <p>
+                <label>
+                    <input type="checkbox" id="useAuth" checked>
+                    Use Authentication (Bearer Token)
+                </label>
+            </p>
+            <p>
+                <label>Auth Token:</label><br>
+                <textarea id="authToken" style="width: 100%; height: 60px; font-family: monospace; font-size: 12px;"></textarea>
+            </p>
+            <button onclick="getStoredToken()">Load Token from LocalStorage</button>
+            <button onclick="clearToken()">Clear Token</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Endpoints</h2>
+            <p>Click a button to test the corresponding API endpoint:</p>
+            
+            <h3>Analytics Endpoints</h3>
+            <button onclick="testEndpoint('/hospital_4/api/analytics/analytics.php?resource=dashboard')">
+                Test Dashboard
+            </button>
+            <button onclick="testEndpoint('/hospital_4/api/analytics/analytics.php?resource=statistics')">
+                Test Statistics
+            </button>
+            <button onclick="testEndpoint('/hospital_4/api/analytics/analytics.php?resource=payroll-summary&year=2026')">
+                Test Payroll Summary
+            </button>
+
+            <h3>Alternative Routes</h3>
+            <button onclick="testEndpoint('/hospital_4/api/analytics')">
+                /api/analytics
+            </button>
+            <button onclick="testEndpoint('/hospital_4/api/v1/analytics/dashboard')">
+                /api/v1/analytics/dashboard
+            </button>
+
+            <div id="response" class="response" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Results</h2>
+            <p>
+                <strong>Status:</strong> <span id="status">Ready</span><br>
+                <strong>Response Time:</strong> <span id="time">-</span> ms<br>
+                <strong>HTTP Status Code:</strong> <span id="httpStatus">-</span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function getStoredToken() {
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token') || '';
+            document.getElementById('authToken').value = token;
+            if (token) {
+                alert('Token loaded: ' + token.substring(0, 50) + '...');
+            } else {
+                alert('No token found in localStorage');
+            }
+        }
+
+        function clearToken() {
+            document.getElementById('authToken').value = '';
+        }
+
+        async function testEndpoint(url) {
+            const responseDiv = document.getElementById('response');
+            const statusSpan = document.getElementById('status');
+            const timeSpan = document.getElementById('time');
+            const httpStatusSpan = document.getElementById('httpStatus');
+
+            try {
+                statusSpan.textContent = 'Testing...';
+                responseDiv.textContent = 'Requesting: ' + url;
+                responseDiv.style.display = 'block';
+
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                if (document.getElementById('useAuth').checked) {
+                    const token = document.getElementById('authToken').value;
+                    if (token) {
+                        headers['Authorization'] = 'Bearer ' + token;
+                    }
+                }
+
+                const startTime = performance.now();
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers,
+                    credentials: 'include'
+                });
+
+                const endTime = performance.now();
+                const duration = Math.round(endTime - startTime);
+
+                timeSpan.textContent = duration;
+                httpStatusSpan.textContent = response.status + ' ' + response.statusText;
+
+                const data = await response.json();
+
+                responseDiv.className = 'response ' + (response.ok ? 'success' : 'error');
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+
+                if (response.ok) {
+                    statusSpan.textContent = '✓ Success';
+                    statusSpan.style.color = 'green';
+                } else {
+                    statusSpan.textContent = '✗ Error (HTTP ' + response.status + ')';
+                    statusSpan.style.color = 'red';
+                }
+
+            } catch (error) {
+                timeSpan.textContent = '—';
+                statusSpan.textContent = '✗ Error: ' + error.message;
+                statusSpan.style.color = 'red';
+                responseDiv.className = 'response error';
+                responseDiv.textContent = 'Error: ' + error.message + '\n\nStack:\n' + error.stack;
+                httpStatusSpan.textContent = 'Network Error';
+            }
+        }
+
+        // Load stored token on page load
+        window.onload = function() {
+            getStoredToken();
+        };
+    </script>
+</body>
+</html>

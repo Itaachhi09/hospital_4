@@ -32,6 +32,11 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = str_replace('/hospital_4/api', '', $path);
 $path = trim($path, '/');
 
+// Remove .php extension if present (for direct file access like /analytics/analytics.php)
+if (substr($path, -4) === '.php') {
+    $path = substr($path, 0, -4);
+}
+
 // Route dispatcher
 $routes = [
     'auth/login' => 'auth/login.php',
@@ -47,6 +52,13 @@ $routes = [
     'salaries' => 'payroll/salaries.php',
     'dashboard' => 'dashboard.php',
     'v1/dashboard' => 'dashboard.php',
+    'analytics' => 'analytics/analytics.php',
+    'analytics/analytics' => 'analytics/analytics.php',
+    'v1/analytics/dashboard' => 'analytics/analytics.php',
+    'v1/analytics/metrics' => 'analytics/analytics.php',
+    'v1/analytics/statistics' => 'analytics/analytics.php',
+    'v1/analytics/payroll-summary' => 'analytics/analytics.php',
+    'v1/analytics/reports' => 'analytics/analytics.php',
     'compensation/plans' => 'compensation/plans.php',
     'compensation/adjustments' => 'compensation/adjustments.php',
     'compensation/incentives' => 'compensation/incentives.php',
