@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Healthcare HR Management System</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Chart.js for dashboard visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-page">
+    <div class="dashboard-wrapper">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar-menu">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span class="logo-icon">🏥</span>
+                    <h2>H VIII<br><small>Hospital</small></h2>
+                </div>
+                <button class="sidebar-collapse-btn" onclick="collapseSidebar()">‹</button>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- MAIN Section -->
+            <div class="sidebar-section">
+                <div class="section-label">MAIN</div>
+                <nav class="sidebar-nav">
+                    <ul class="nav-items">
+                        <li><a href="#" data-section="dashboard" class="nav-item active">📊 Overview / Dashboard</a></li>
+                        <li><a href="#" data-section="notifications" class="nav-item">🔔 Notifications</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- MODULES Section -->
+            <div class="sidebar-section">
+                <div class="section-label">MODULES</div>
+                <nav class="sidebar-sections">
+
+                    <!-- HR CORE Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">👥 HR Core
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="hrcore-employees" class="menu-item">Employee Management</a></li>
+                            <li><a href="#" data-section="hrcore-documents" class="menu-item">Employee Documents</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- PAYROLL Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">💳 Payroll
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="bonuses" class="menu-item">Bonuses & Incentives</a></li>
+                            <li><a href="#" data-section="deductions" class="menu-item">Deductions</a></li>
+                            <li><a href="#" data-section="payroll-runs" class="menu-item">Payroll Runs</a></li>
+                            <li><a href="#" data-section="payslips" class="menu-item">Payslips</a></li>
+                            <li><a href="#" data-section="salaries" class="menu-item">Salaries</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- COMPENSATION Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">💰 Compensation
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="comp-plans" class="menu-item">Plans</a></li>
+                            <li><a href="#" data-section="comp-adjustments" class="menu-item">Adjustments</a></li>
+                            <li><a href="#" data-section="comp-incentives" class="menu-item">Incentives</a></li>
+                            <li><a href="#" data-section="comp-bonds" class="menu-item">Bonds</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- HMO Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">🏥 HMO & Benefits
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="hmo-providers" class="menu-item">Providers</a></li>
+                            <li><a href="#" data-section="hmo-plans" class="menu-item">Plans</a></li>
+                            <li><a href="#" data-section="hmo-enrollments" class="menu-item">Enrollments</a></li>
+                            <li><a href="#" data-section="hmo-claims" class="menu-item">Claims</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- ANALYTICS Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">📊 Analytics
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="analytics-dashboard" class="menu-item">Dashboard</a></li>
+                            <li><a href="#" data-section="analytics-reports" class="menu-item">Reports</a></li>
+                            <li><a href="#" data-section="analytics-metrics" class="menu-item">Metrics</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- ADMIN Section -->
+                    <div class="menu-section">
+                        <div class="section-title collapsible-toggle" onclick="toggleMenuSection(this)">⚙️ Admin
+                            <span class="expand-icon">+</span>
+                        </div>
+                        <ul class="menu-items">
+                            <li><a href="#" data-section="admin-settings" class="menu-item">Settings</a></li>
+                            <li><a href="#" data-section="admin-users" class="menu-item">Users</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Logout -->
+            <div class="sidebar-logout">
+                <a href="#" onclick="logout()" class="logout-btn">→ Logout</a>
+            </div>
+        </aside>
+
+            <!-- Main Area (Header + Content) -->
+            <div class="main-area">
+            <!-- Top Header -->
+            <header class="top-header hospital-header">
+                <div class="header-left">
+                    <div class="hospital-title">
+                        <h1>🏥 HOSPITAL DASHBOARD</h1>
+                        <p class="hospital-subtitle">Integrity • Service • Commitment • Respect • Compassion</p>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn notification-btn" id="notificationBell" onclick="toggleNotificationDropdown()">
+                        🔔
+                        <span class="badge" id="notificationBadge" style="display: none;">0</span>
+                    </button>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notificationDropdown" style="
+                        position: absolute;
+                        top: 60px;
+                        right: 60px;
+                        background: #1e293b;
+                        border: 1px solid #334155;
+                        border-radius: 8px;
+                        width: 380px;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+                        z-index: 1000;
+                        display: none;
+                        overflow: hidden;
+                    ">
+                        <!-- Header -->
+                        <div style="
+                            background: #0f172a;
+                            padding: 16px;
+                            border-bottom: 1px solid #334155;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        ">
+                            <h3 style="margin: 0; color: #ffffff; font-size: 16px; font-weight: 600;">🔔 Notifications</h3>
+                            <button onclick="closeNotificationDropdown()" style="
+                                background: none;
+                                border: none;
+                                color: #cbd5e1;
+                                cursor: pointer;
+                                font-size: 18px;
+                            ">✕</button>
+                        </div>
+
+                        <!-- Notifications List -->
+                        <div id="dropdownNotificationsList" style="
+                            max-height: 400px;
+                            overflow-y: auto;
+                            padding: 8px;
+                        ">
+                            <div style="padding: 20px; text-align: center; color: #cbd5e1;">Loading...</div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="
+                            border-top: 1px solid #334155;
+                            padding: 12px;
+                            text-align: center;
+                            background: #0f172a;
+                        ">
+                            <button onclick="goToNotificationsPage()" style="
+                                background: #3b82f6;
+                                color: white;
+                                border: none;
+                                padding: 8px 16px;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 13px;
+                                width: 100%;
+                                transition: all 0.2s;
+                            " onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#3b82f6'">
+                                View All Notifications
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="user-profile" onclick="navigateToProfile()">
+                        <div class="avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="headerUserName">User</span>
+                            <span class="user-role" id="headerUserRole">admin</span>
+                        </div>
+                        <span class="dropdown-arrow">⌄</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="page-section active">
+                    <div id="main-content-area"></div>
+                </section>
+
+                <!-- Notifications Section -->
+                <section id="notifications" class="page-section">
+                    <div class="section-header">
+                        <h2>🔔 Notifications</h2>
+                        <p>Your system notifications and alerts</p>
+                    </div>
+                    <div id="notificationsContainer" style="color: #cbd5e1; padding: 20px; text-align: center;">No notifications at this time</div>
+                </section>
+
+                <!-- Profile Settings Section -->
+                <section id="profile" class="page-section">
+                    <div class="section-header">
+                        <h2 class="back-link" onclick="navigateToDashboard()">← Profile Settings</h2>
+                        <p>Manage your personal information and account settings</p>
+                    </div>
+
+                    <div class="profile-container">
+                        <!-- Left: Profile Card -->
+                        <div class="profile-card-col">
+                            <div class="profile-card">
+                                <div class="profile-bg"></div>
+                                <div class="profile-avatar">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23667eea' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='%23fff' text-anchor='middle' dy='.3em'%3E👤%3C/text%3E%3C/svg%3E" alt="Profile" id="profileImg" style="width:120px;height:120px;border-radius:50%;">
+                                    <span class="status-badge">●</span>
+                                </div>
+                                <h3 id="profileName">Dexter</h3>
+                                <p id="profileRole">Admin</p>
+
+                                <div class="profile-info">
+                                    <div class="info-item">
+                                        <span class="info-icon">✉️</span>
+                                        <span id="profileEmail">delacrudj50@gmail.com</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-icon">📱</span>
+                                        <span id="profilePhone">09654680843</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-icon">🏷️</span>
+                                        <span id="profileRoleDisplay">Admin</span>
+                                    </div>
+                                </div>
+
+                                <div class="quick-actions">
+                                    <h4>Quick Actions</h4>
+                                    <a href="#" class="action-link" onclick="navigateToDashboard()">🏠 Dashboard</a>
+                                    <a href="#" class="action-link logout" onclick="logout()">🚪 Sign Out</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Edit Form -->
+                        <div class="profile-form-col">
+                            <div class="form-section">
+                                <h3>Personal Information</h3>
+                                <p class="form-subtitle">Update your profile details and personal information</p>
+
+                                <div class="upload-section">
+                                    <div class="upload-box">
+                                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23e5e7eb' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' font-size='36' fill='%239ca3af' text-anchor='middle' dy='.3em'%3E📷%3C/text%3E%3C/svg%3E" alt="Profile" class="upload-preview" style="width:80px;height:80px;">
+                                        <button class="upload-btn">⬇️ Upload Photo</button>
+                                        <small>JPG, PNG or GIF (Max 5MB)</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" id="editUsername" placeholder="Dexter" value="Dexter">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" id="editEmail" placeholder="Email" value="delacrudj50@gmail.com">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="tel" id="editPhone" placeholder="Phone" value="09654680843">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <input type="text" placeholder="Role" value="Admin" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button class="btn-cancel">Cancel</button>
+                                    <button class="btn-save">✓ Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Employees Section -->
+                <section id="employees" class="page-section">
+                    <div class="section-header">
+                        <h2>Employees</h2>
+                    </div>
+                    <div id="employeesContainer"></div>
+                </section>
+
+                <!-- HR Core Employees Section -->
+                <section id="hrcore-employees" class="page-section">
+                    <div class="section-header">
+                        <h2>Employee Management</h2>
+                    </div>
+                    <div id="hrcoreEmployeesContainer"></div>
+                </section>
+
+                <!-- HR Core Documents Section -->
+                <section id="hrcore-documents" class="page-section">
+                    <div class="section-header">
+                        <h2>Employee Documents</h2>
+                    </div>
+                    <div id="employeeDocumentsContainer"></div>
+                </section>
+
+                <!-- Departments Section -->
+                <section id="departments" class="page-section">
+                    <div class="section-header">
+                        <h2>Departments</h2>
+                    </div>
+                    <div id="departmentsContainer"></div>
+                </section>
+                <!-- Compensation Plans Section -->
+                <section id="comp-plans" class="page-section">
+                    <div class="section-header">
+                        <h2>💰 Compensation Plans</h2>
+                        <p>Manage compensation plans, allowances, and overtime rules</p>
+                    </div>
+                    <div id="compPlansContainer" style="background: white; border-radius: 8px; padding: 20px;"></div>
+                </section>
+
+                <!-- Compensation Adjustments Section -->
+                <section id="comp-adjustments" class="page-section">
+                    <div class="section-header">
+                        <h2>📈 Salary Adjustments</h2>
+                        <p>Manage salary adjustments with multi-level approval workflow</p>
+                    </div>
+                    <div id="compAdjustmentsContainer" style="background: white; border-radius: 8px; padding: 20px;"></div>
+                </section>
+
+                <!-- Compensation Incentives Section -->
+                <section id="comp-incentives" class="page-section">
+                    <div class="section-header">
+                        <h2>🎁 Incentives Management</h2>
+                        <p>Manage performance bonuses, holiday pay, hazard incentives, and loyalty rewards</p>
+                    </div>
+                    <div id="compIncentivesContainer" style="background: white; border-radius: 8px; padding: 20px;"></div>
+                </section>
+
+                <!-- Compensation Pay Bonds Section -->
+                <section id="comp-bonds" class="page-section">
+                    <div class="section-header">
+                        <h2>📎 Pay Bonds Management</h2>
+                        <p>Track training bonds, scholarship bonds, and contractual bonds</p>
+                    </div>
+                    <div id="compBondsContainer" style="background: white; border-radius: 8px; padding: 20px;"></div>
+                </section>
+
+                <!-- Bonuses Section -->
+                <section id="bonuses" class="page-section">
+                    <div class="section-header">
+                        <h2>Bonuses & Incentives</h2>
+                    </div>
+                    <div id="bonusesContainer"></div>
+                </section>
+
+                <!-- Deductions Section -->
+                <section id="deductions" class="page-section">
+                    <div class="section-header">
+                        <h2>Deductions Management</h2>
+                    </div>
+                    <div id="deductionsContainer"></div>
+                </section>
+
+                <!-- Payroll Runs Section -->
+                <section id="payroll-runs" class="page-section">
+                    <div class="section-header">
+                        <h2>Payroll Runs</h2>
+                    </div>
+                    <div id="payrollRunsContainer"></div>
+                </section>
+
+                <!-- Payslips Section -->
+                <section id="payslips" class="page-section">
+                    <div class="section-header">
+                        <h2>Payslips</h2>
+                    </div>
+                    <div id="payslipsContainer"></div>
+                </section>
+
+                <!-- Salaries Section -->
+                <section id="salaries" class="page-section">
+                    <div class="section-header">
+                        <h2>Salaries</h2>
+                    </div>
+                    <div id="salariesContainer"></div>
+                </section>
+
+                <!-- HMO Providers Section -->
+                <section id="hmo-providers" class="page-section">
+                    <div class="section-header">
+                        <h2>HMO Providers</h2>
+                    </div>
+                    <div id="hmoProvidersContainer"></div>
+                </section>
+
+                <!-- HMO Plans Section -->
+                <section id="hmo-plans" class="page-section">
+                    <div class="section-header">
+                        <h2>HMO Benefit Plans</h2>
+                    </div>
+                    <div id="hmoPlansContainer"></div>
+                </section>
+
+                <!-- HMO Enrollments Section -->
+                <section id="hmo-enrollments" class="page-section">
+                    <div class="section-header">
+                        <h2>HMO Enrollments</h2>
+                    </div>
+                    <div id="hmoEnrollmentsContainer"></div>
+                </section>
+
+                <!-- HMO Claims Section -->
+                <section id="hmo-claims" class="page-section">
+                    <div class="section-header">
+                        <h2>HMO Claims</h2>
+                    </div>
+                    <div id="hmoClaimsContainer"></div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analytics" class="page-section">
+                    <div class="section-header">
+                        <h2>Analytics & Reports</h2>
+                    </div>
+                    <div id="analyticsContainer"></div>
+                </section>
+
+                <!-- Analytics Dashboard Section -->
+                <section id="analytics-dashboard" class="page-section">
+                    <div id="analytics-dashboard-content"></div>
+                </section>
+
+                <!-- Analytics Reports Section -->
+                <section id="analytics-reports" class="page-section">
+                    <div id="analytics-reports-content"></div>
+                </section>
+
+                <!-- Analytics Metrics Section -->
+                <section id="analytics-metrics" class="page-section">
+                    <div id="analytics-metrics-content"></div>
+                </section>
+
+                <!-- Admin Settings Section -->
+                <section id="admin-settings" class="page-section">
+                    <div class="section-header">
+                        <h2>⚙️ System Settings</h2>
+                        <p>Configure system-wide settings and preferences</p>
+                    </div>
+                    <div id="adminSettingsContainer" style="color: #cbd5e1; padding: 20px; text-align: center;">Admin settings coming soon</div>
+                </section>
+
+                <!-- Admin Users Section -->
+                <section id="admin-users" class="page-section">
+                    <div class="section-header">
+                        <h2>👥 User Management</h2>
+                        <p>Manage system users and permissions</p>
+                    </div>
+                    <div id="adminUsersContainer" style="color: #cbd5e1; padding: 20px; text-align: center;">User management coming soon</div>
+                </section>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Button & API Handler Utilities -->
+    <script src="assets/js/button-handler.js?v=1.0"></script>
+    <script src="assets/js/button-handlers-map.js?v=1.0"></script>
+    <script src="assets/js/onclick-handlers.js?v=1.0"></script>
+    <script src="assets/js/compensation-module.js?v=2.0"></script>
+    <script src="assets/js/dashboard.js?v=2.2"></script>
+</body>
+</html>

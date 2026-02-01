@@ -1,0 +1,698 @@
+openapi: 3.0.3
+info:
+  title: HR4 Hospital HR Management System API
+  description: |
+    Complete RESTful API for HR4 Hospital HR Management System
+    
+    API Versioning:
+    - All module endpoints are versioned: /api/v1/, /api/v2/
+    - Never modify existing endpoint request/response in a breaking way
+    - Add new versions (e.g. v2) for breaking changes; deprecate old with X-API-Deprecated and X-API-Sunset
+    
+    Modules:
+    - HR Core: Employee and organizational management
+    - Payroll: Payroll computation and processing (consumes HR Core via interface only)
+    - Compensation: Benefits, allowances, bonuses
+    - HMO: Health Maintenance Organization management
+    - Analytics: Reporting and business intelligence
+    
+    Supports integration across HR 1, HR 2, and HR 3 systems.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api-support@hospital.com
+  license:
+    name: Proprietary
+  x-api-versioning-policy: "Strict version prefix; no breaking changes without new version"
+  x-deprecation-policy: "Deprecated endpoints return X-API-Deprecated: true and X-API-Sunset: YYYY-MM-DD"
+
+servers:
+  - url: http://localhost/hospital_4/api
+    description: Development Server
+  - url: https://api.hospital.com
+    description: Production Server
+
+x-versioned-paths:
+  v1: "/v1/"
+  description: "Use /api/v1/{module}/... for all module endpoints. Auth and health may omit version."
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: HR Core
+    description: Employee and organizational management
+  - name: Payroll
+    description: Payroll computation and processing
+  - name: Compensation
+    description: Benefits, allowances, and bonuses
+  - name: HMO
+    description: Health Maintenance Organization management
+  - name: Analytics
+    description: Reporting and analytics
+  - name: Integration
+    description: Multi-system integration endpoints
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User Login
+      description: Authenticate user and receive JWT token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/hrcore/employees:
+    get:
+      tags:
+        - HR Core
+      summary: Get All Employees
+      description: Retrieve list of employees with pagination and filtering
+      operationId: getEmployees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEmployees'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    post:
+      tags:
+        - HR Core
+      summary: Create Employee
+      description: Create a new employee record
+      operationId: createEmployee
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeInput'
+      responses:
+        '201':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/hrcore/employees/{id}:
+    get:
+      tags:
+        - HR Core
+      summary: Get Employee by ID
+      operationId: getEmployee
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    put:
+      tags:
+        - HR Core
+      summary: Update Employee
+      operationId: updateEmployee
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeInput'
+      responses:
+        '200':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    delete:
+      tags:
+        - HR Core
+      summary: Delete Employee
+      operationId: deleteEmployee
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/payroll/runs:
+    get:
+      tags:
+        - Payroll
+      summary: Get All Payroll Runs
+      operationId: getPayrollRuns
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: period
+          in: query
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}$'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPayrollRuns'
+    
+    post:
+      tags:
+        - Payroll
+      summary: Create Payroll Run
+      operationId: createPayrollRun
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollRunInput'
+      responses:
+        '201':
+          description: Payroll run created
+
+  /v1/payroll/runs/{id}/compute:
+    post:
+      tags:
+        - Payroll
+      summary: Compute Payroll
+      operationId: computePayroll
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payroll computation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayrollComputationResult'
+
+  /v1/compensation/benefits:
+    get:
+      tags:
+        - Compensation
+      summary: Get All Benefits
+      operationId: getBenefits
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+    
+    post:
+      tags:
+        - Compensation
+      summary: Create Benefit
+      operationId: createBenefit
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BenefitInput'
+      responses:
+        '201':
+          description: Benefit created
+
+  /v1/hmo/enrollments:
+    get:
+      tags:
+        - HMO
+      summary: Get All Enrollments
+      operationId: getEnrollments
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+    
+    post:
+      tags:
+        - HMO
+      summary: Enroll Employee
+      operationId: enrollEmployee
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMOEnrollmentInput'
+      responses:
+        '201':
+          description: Employee enrolled
+
+  /v1/analytics/hr-metrics:
+    get:
+      tags:
+        - Analytics
+      summary: Get HR Metrics
+      operationId: getHRMetrics
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HRMetrics'
+
+  /v1/integration/employees:
+    post:
+      tags:
+        - Integration
+      summary: Sync Employees
+      operationId: syncEmployees
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: X-System-ID
+          in: header
+          schema:
+            type: string
+            enum: [HR1, HR2, HR3]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeSyncInput'
+      responses:
+        '200':
+          description: Synchronization completed
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            refresh_token:
+              type: string
+            user:
+              $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [admin, hr_manager, payroll_officer, finance_officer, employee]
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: string
+        employee_code:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        department_id:
+          type: string
+        department_name:
+          type: string
+        position_id:
+          type: string
+        position_name:
+          type: string
+        base_salary:
+          type: number
+        status:
+          type: string
+
+    EmployeeInput:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - email
+        - hire_date
+        - department_id
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+        gender:
+          type: string
+        hire_date:
+          type: string
+          format: date
+        department_id:
+          type: string
+        position_id:
+          type: string
+        employment_type:
+          type: string
+        base_salary:
+          type: number
+
+    PaginatedEmployees:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalPages:
+          type: integer
+
+    PayrollRun:
+      type: object
+      properties:
+        id:
+          type: string
+        payroll_period:
+          type: string
+        period_start_date:
+          type: string
+          format: date
+        period_end_date:
+          type: string
+          format: date
+        payment_date:
+          type: string
+          format: date
+        approval_status:
+          type: string
+        total_employees:
+          type: integer
+        total_gross_salary:
+          type: number
+        total_deductions:
+          type: number
+        total_net_salary:
+          type: number
+
+    PayrollRunInput:
+      type: object
+      required:
+        - period
+      properties:
+        period:
+          type: string
+          pattern: '^\d{4}-\d{2}$'
+        total_employees:
+          type: integer
+        period_start_date:
+          type: string
+          format: date
+        period_end_date:
+          type: string
+          format: date
+        payment_date:
+          type: string
+          format: date
+
+    PayrollComputationResult:
+      type: object
+      properties:
+        payroll_id:
+          type: string
+        employees_computed:
+          type: integer
+        total_gross_salary:
+          type: number
+        total_deductions:
+          type: number
+        total_net_salary:
+          type: number
+
+    BenefitInput:
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        coverage:
+          type: string
+        cost_employer:
+          type: number
+        cost_employee:
+          type: number
+
+    HMOEnrollmentInput:
+      type: object
+      required:
+        - EmployeeID
+        - PlanID
+      properties:
+        EmployeeID:
+          type: string
+        PlanID:
+          type: string
+        EnrollmentDate:
+          type: string
+          format: date
+        Dependents:
+          type: integer
+
+    HRMetrics:
+      type: object
+      properties:
+        total_employees:
+          type: integer
+        active_employees:
+          type: integer
+        total_departments:
+          type: integer
+        recent_hires:
+          type: array
+          items:
+            type: object
+
+    EmployeeSyncInput:
+      type: object
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeInput'
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+        timestamp:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        message:
+          type: string
+        errors:
+          type: object
+        timestamp:
+          type: string
+
+    PaginatedPayrollRuns:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayrollRun'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - Invalid or missing token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Forbidden:
+      description: Forbidden - Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    BadRequest:
+      description: Bad request - Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

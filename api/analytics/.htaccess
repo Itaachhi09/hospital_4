@@ -1,0 +1,17 @@
+# Analytics Endpoint - Allow direct access
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Allow direct file access
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    # Allow directory access
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+</IfModule>
+
+# Allow all requests
+<IfModule mod_authz_core.c>
+    Require all granted
+</IfModule>

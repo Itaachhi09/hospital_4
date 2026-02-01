@@ -1,0 +1,1493 @@
+ {
+	"info": {
+		"_postman_id": "hr4-api-collection-2026",
+		"name": "HR4 Hospital HR Management System - Complete API Collection",
+		"description": "Complete RESTful API collection for HR4 Hospital HR Management System\n\nModules:\n- HR Core (Employee, Departments, Positions, Documents)\n- Payroll (Runs, Payslips, Attendance, Compliance)\n- Compensation (Plans, Salary Adjustments, Incentives, Pay Bonds, Dashboard)\n- HMO (Providers, Plans, Enrollments, Claims)\n- Analytics (HR Metrics, Payroll Summary, HMO Usage, Reports, Statistics)\n- Integration (Sync with HR 1, HR 2, HR 3 systems)\n- Authentication & Health Check\n\nSupports integration across HR 1, HR 2, and HR 3 systems.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "hr4-system"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/hospital_4/api",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "v1",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "system_id",
+			"value": "HR1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.token) {",
+									"        pm.collectionVariables.set('access_token', jsonData.data.token);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@hospital.com\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@hospital.com\",\n    \"password\": \"SecurePass123!\",\n    \"role\": \"employee\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "HR Core Module",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees?page=1&pageSize=20&status=active",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "20"
+								},
+								{
+									"key": "status",
+									"value": "active"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Employee by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees/EMP001",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees", "EMP001"]
+						}
+					}
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith\",\n    \"email\": \"jane.smith@hospital.com\",\n    \"phone\": \"+63 912 345 6789\",\n    \"date_of_birth\": \"1990-05-15\",\n    \"gender\": \"Female\",\n    \"hire_date\": \"2026-01-15\",\n    \"department_id\": \"DEPT001\",\n    \"position_id\": \"POS001\",\n    \"employment_type\": \"regular\",\n    \"base_salary\": 50000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees"]
+						}
+					}
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Jane\",\n    \"last_name\": \"Smith-Doe\",\n    \"phone\": \"+63 912 345 6789\",\n    \"base_salary\": 55000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees/EMP001",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees", "EMP001"]
+						}
+					}
+				},
+				{
+					"name": "Delete Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees/EMP001",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees", "EMP001"]
+						}
+					}
+				},
+				{
+					"name": "Get Employee Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/employees/EMP001/documents",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "employees", "EMP001", "documents"]
+						}
+					}
+				},
+				{
+					"name": "Get All Departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/departments",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "departments"]
+						}
+					}
+				},
+				{
+					"name": "Get All Positions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hrcore/positions",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hrcore", "positions"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Payroll Module",
+			"item": [
+				{
+					"name": "Get All Payroll Runs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/runs?page=1&pageSize=20",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "runs"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Payroll Run by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/runs/PAYROLL20260101001",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "runs", "PAYROLL20260101001"]
+						}
+					}
+				},
+				{
+					"name": "Create Payroll Run",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"period\": \"2026-02\",\n    \"total_employees\": 156,\n    \"period_start_date\": \"2026-02-01\",\n    \"period_end_date\": \"2026-02-28\",\n    \"payment_date\": \"2026-02-28\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/runs",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "runs"]
+						}
+					}
+				},
+				{
+					"name": "Compute Payroll",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/runs/PAYROLL20260101001/compute",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "runs", "PAYROLL20260101001", "compute"]
+						}
+					}
+				},
+				{
+					"name": "Approve Payroll",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"approved\",\n    \"reason\": \"All calculations verified\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/runs/PAYROLL20260101001/approve",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "runs", "PAYROLL20260101001", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Get Payslips by Employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/payslips/EMP001?period=2026-01",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "payslips", "EMP001"],
+							"query": [
+								{
+									"key": "period",
+									"value": "2026-01"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Attendance Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/attendance?employee_id=EMP001&period=2026-01",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "attendance"],
+							"query": [
+								{
+									"key": "employee_id",
+									"value": "EMP001"
+								},
+								{
+									"key": "period",
+									"value": "2026-01"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Compliance Reports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/payroll/compliance?period=2026-01&type=tax",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "payroll", "compliance"],
+							"query": [
+								{
+									"key": "period",
+									"value": "2026-01"
+								},
+								{
+									"key": "type",
+									"value": "tax"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Compensation Module",
+			"item": [
+				{
+					"name": "Compensation Plans",
+					"item": [
+						{
+							"name": "List Plans",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans?page=1&limit=20&status=active",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										},
+										{
+											"key": "status",
+											"value": "active"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Plan Details",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001"]
+								}
+							}
+						},
+						{
+							"name": "Create Compensation Plan",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"plan_code\": \"PLAN-2026-001\",\n  \"plan_name\": \"Nursing Staff Plan 2026\",\n  \"plan_description\": \"Compensation plan for nursing staff\",\n  \"salary_grade_id\": \"GRD001\",\n  \"base_salary\": 25000,\n  \"grade_step\": 1,\n  \"effective_date\": \"2026-02-01\",\n  \"applicable_employment_types\": [\"full-time\", \"regular\"],\n  \"auto_sync_payroll\": true,\n  \"allowances\": [\n    {\n      \"allowance_name\": \"Hazard Pay\",\n      \"allowance_type\": \"hazard_pay\",\n      \"amount\": 2500,\n      \"calculation_basis\": \"fixed\",\n      \"frequency\": \"monthly\",\n      \"tax_treatment\": \"taxable\"\n    },\n    {\n      \"allowance_name\": \"Meal Allowance\",\n      \"allowance_type\": \"meal\",\n      \"amount\": 4000,\n      \"calculation_basis\": \"fixed\",\n      \"frequency\": \"monthly\",\n      \"tax_treatment\": \"non_taxable\"\n    }\n  ],\n  \"overtime_rules\": [\n    {\n      \"overtime_type\": \"regular\",\n      \"rate_multiplier\": 1.25,\n      \"applicable_on_weekends\": true,\n      \"applicable_on_holidays\": false\n    },\n    {\n      \"overtime_type\": \"holiday\",\n      \"rate_multiplier\": 1.5,\n      \"applicable_on_holidays\": true\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans"]
+								}
+							}
+						},
+						{
+							"name": "Update Plan",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"plan_name\": \"Updated Nursing Plan 2026\",\n  \"base_salary\": 26000,\n  \"status\": \"active\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001"]
+								}
+							}
+						},
+						{
+							"name": "Delete Plan",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001"]
+								}
+							}
+						},
+						{
+							"name": "Get Plan Allowances",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001/allowances",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001", "allowances"]
+								}
+							}
+						},
+						{
+							"name": "Get Plan Overtime Rules",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001/overtime-rules",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001", "overtime-rules"]
+								}
+							}
+						},
+						{
+							"name": "Assign Plan to Employee",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"employee_id\": \"EMP001\",\n  \"effective_date\": \"2026-02-01\",\n  \"remarks\": \"Promotion assignment\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001/assign",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001", "assign"]
+								}
+							}
+						},
+						{
+							"name": "Get Plan Assignments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/plans/PLAN001/assignments",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "plans", "PLAN001", "assignments"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Salary Adjustments",
+					"item": [
+						{
+							"name": "List Adjustments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments?status=active&page=1&limit=20",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments"],
+									"query": [
+										{
+											"key": "status",
+											"value": "active"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Adjustment Details",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments/SADJ20240201001234",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments", "SADJ20240201001234"]
+								}
+							}
+						},
+						{
+							"name": "Create Salary Adjustment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"employee_id\": \"EMP001\",\n  \"adjustment_type\": \"annual_increase\",\n  \"current_salary\": 25000,\n  \"adjustment_amount\": 2500,\n  \"new_salary\": 27500,\n  \"effective_date\": \"2026-02-01\",\n  \"reason\": \"Annual merit increase 2026\",\n  \"justification\": \"Outstanding performance\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments"]
+								}
+							}
+						},
+						{
+							"name": "Submit Adjustment for Approval",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments/SADJ20240201001234/submit",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments", "SADJ20240201001234", "submit"]
+								}
+							}
+						},
+						{
+							"name": "HR Approve Adjustment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"approval_notes\": \"Approved by HR\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments/SADJ20240201001234/approve-hr",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments", "SADJ20240201001234", "approve-hr"]
+								}
+							}
+						},
+						{
+							"name": "Finance Approve Adjustment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"approval_notes\": \"Approved by Finance\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments/SADJ20240201001234/approve-finance",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments", "SADJ20240201001234", "approve-finance"]
+								}
+							}
+						},
+						{
+							"name": "Reject Adjustment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reason\": \"Budget constraints for this period\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/adjustments/SADJ20240201001234/reject",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "adjustments", "SADJ20240201001234", "reject"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Incentives",
+					"item": [
+						{
+							"name": "Get Incentive Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives/incentive-types",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives", "incentive-types"]
+								}
+							}
+						},
+						{
+							"name": "List Incentives",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives?status=active&page=1&limit=20",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives"],
+									"query": [
+										{
+											"key": "status",
+											"value": "active"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Incentive Details",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives/INCV20240201001234",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives", "INCV20240201001234"]
+								}
+							}
+						},
+						{
+							"name": "Create Incentive",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"incentive_type_id\": \"INCTYPE001\",\n  \"employee_id\": \"EMP001\",\n  \"incentive_amount\": 5000,\n  \"effective_date\": \"2026-02-01\",\n  \"one_time_or_recurring\": \"one_time\",\n  \"reason_for_incentive\": \"Top performer in nursing excellence\",\n  \"linked_metrics\": {\n    \"patient_satisfaction\": 95,\n    \"attendance_rate\": 100,\n    \"service_quality\": \"excellent\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives"]
+								}
+							}
+						},
+						{
+							"name": "Approve Incentive",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"distribution_amount\": 5000,\n  \"payment_method\": \"bank_transfer\",\n  \"distribution_date\": \"2026-02-15\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives/INCV20240201001234/approve",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives", "INCV20240201001234", "approve"]
+								}
+							}
+						},
+						{
+							"name": "Reject Incentive",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reason\": \"Performance metrics not met\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives/INCV20240201001234/reject",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives", "INCV20240201001234", "reject"]
+								}
+							}
+						},
+						{
+							"name": "Get Incentive Distributions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/incentives/INCV20240201001234/distributions",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "incentives", "INCV20240201001234", "distributions"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Pay Bonds",
+					"item": [
+						{
+							"name": "Get Bond Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/bond-types",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "bond-types"]
+								}
+							}
+						},
+						{
+							"name": "List Bonds",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds?status=active&page=1&limit=20",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds"],
+									"query": [
+										{
+											"key": "status",
+											"value": "active"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Bond Details",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234"]
+								}
+							}
+						},
+						{
+							"name": "Create Pay Bond",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"bond_type_id\": \"BONDTYPE001\",\n  \"employee_id\": \"EMP001\",\n  \"bond_amount\": 50000,\n  \"bond_start_date\": \"2026-02-01\",\n  \"bond_end_date\": \"2027-02-01\",\n  \"bond_purpose\": \"Medical/Nursing Training Program\",\n  \"deduction_method\": \"fixed_amount\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds"]
+								}
+							}
+						},
+						{
+							"name": "Update Bond",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"bond_amount\": 60000,\n  \"status\": \"active\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234"]
+								}
+							}
+						},
+						{
+							"name": "Get Bond Deduction Schedule",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234/deductions",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234", "deductions"]
+								}
+							}
+						},
+						{
+							"name": "Process Monthly Deduction",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"deduction_month\": \"2026-02-01\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234/deductions/process",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234", "deductions", "process"]
+								}
+							}
+						},
+						{
+							"name": "Early Termination",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"termination_reason\": \"Employee resignation - penalty applied\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234/terminate-early",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234", "terminate-early"]
+								}
+							}
+						},
+						{
+							"name": "Mark Bond Completed",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/bonds/BOND20240201001234/mark-completed",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "bonds", "BOND20240201001234", "mark-completed"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Get Compensation Dashboard",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/{{api_version}}/compensation/dashboard",
+									"host": ["{{base_url}}"],
+									"path": ["{{api_version}}", "compensation", "dashboard"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "HMO Module",
+			"item": [
+				{
+					"name": "Get All HMO Providers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/providers",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "providers"]
+						}
+					}
+				},
+				{
+					"name": "Create HMO Provider",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ProviderName\": \"MediCare Plus\",\n    \"ContactPerson\": \"John Doe\",\n    \"ContactPhone\": \"08012345678\",\n    \"ContactEmail\": \"contact@medicare.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/providers",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "providers"]
+						}
+					}
+				},
+				{
+					"name": "Get All HMO Plans",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/plans",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "plans"]
+						}
+					}
+				},
+				{
+					"name": "Get All Enrollments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/enrollments?status=Active",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "enrollments"],
+							"query": [
+								{
+									"key": "status",
+									"value": "Active"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Enroll Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"EmployeeID\": \"EMP001\",\n    \"PlanID\": \"PLAN001\",\n    \"EnrollmentDate\": \"2026-01-15\",\n    \"Dependents\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/enroll",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "enroll"]
+						}
+					}
+				},
+				{
+					"name": "Get All Claims",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/claims?status=Pending",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "claims"],
+							"query": [
+								{
+									"key": "status",
+									"value": "Pending"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "File HMO Claim",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"EmployeeID\": \"EMP001\",\n    \"Amount\": 50000,\n    \"ClaimDate\": \"2026-01-10\",\n    \"Reason\": \"Medical Treatment\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/hmo/claims",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "hmo", "claims"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Analytics Module",
+			"item": [
+				{
+					"name": "Get HR Metrics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/hr-metrics",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "hr-metrics"]
+						}
+					}
+				},
+				{
+					"name": "Get Payroll Summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/payroll-summary?year=2026",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "payroll-summary"],
+							"query": [
+								{
+									"key": "year",
+									"value": "2026"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get HMO Usage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/hmo-usage?period=2026-01",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "hmo-usage"],
+							"query": [
+								{
+									"key": "period",
+									"value": "2026-01"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Dashboard Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/dashboard",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Get Reports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/reports?type=payroll",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "reports"],
+							"query": [
+								{
+									"key": "type",
+									"value": "payroll"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/analytics/statistics",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "analytics", "statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Integration (HR 1, HR 2, HR 3)",
+			"item": [
+				{
+					"name": "Sync Employees",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-System-ID",
+								"value": "{{system_id}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employees\": [\n        {\n            \"id\": \"EMP001\",\n            \"first_name\": \"John\",\n            \"last_name\": \"Doe\",\n            \"email\": \"john.doe@hospital.com\",\n            \"department_id\": \"DEPT001\",\n            \"position_id\": \"POS001\",\n            \"status\": \"active\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/integration/employees",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "integration", "employees"]
+						}
+					}
+				},
+				{
+					"name": "Sync Payroll",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-System-ID",
+								"value": "{{system_id}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payroll_runs\": [\n        {\n            \"id\": \"PAYROLL20260101001\",\n            \"period\": \"2026-01\",\n            \"total_employees\": 156,\n            \"total_gross_salary\": 8500000,\n            \"total_deductions\": 1200000,\n            \"total_net_salary\": 7300000,\n            \"status\": \"approved\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/integration/payroll",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "integration", "payroll"]
+						}
+					}
+				},
+				{
+					"name": "Get Sync Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-System-ID",
+								"value": "{{system_id}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/{{api_version}}/integration/sync",
+							"host": ["{{base_url}}"],
+							"path": ["{{api_version}}", "integration", "sync"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": ["{{base_url}}"],
+					"path": ["health"]
+				}
+			}
+		}
+	]
+}
