@@ -139,11 +139,27 @@ class APIRouter {
         $this->routes['v1/dashboard'] = 'dashboard.php';
         
         // Analytics Module - v1
+        $this->routes['v1/analytics/dashboard'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/kpis'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/employees'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/payroll'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/attendance'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/compensation'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/metrics/compliance'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/reports'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/reports/list'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/reports/{type}'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/reports/{type}/export'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/departments/{id}'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/departments/{id}/metrics'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/departments/{id}/employees'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/departments/{id}/payroll'] = 'analytics/analytics-enhanced.php';
+        $this->routes['v1/analytics/departments/{id}/attendance'] = 'analytics/analytics-enhanced.php';
+        // Keep legacy routes for backward compatibility
         $this->routes['v1/analytics/hr-metrics'] = 'analytics/analytics.php';
         $this->routes['v1/analytics/payroll-summary'] = 'analytics/analytics.php';
         $this->routes['v1/analytics/hmo-usage'] = 'analytics/analytics.php';
-        $this->routes['v1/analytics/dashboard'] = 'analytics/analytics.php';
-        $this->routes['v1/analytics/reports'] = 'analytics/analytics.php';
         $this->routes['v1/analytics/statistics'] = 'analytics/analytics.php';
         
         // Integration endpoints for HR 1, HR 2, HR 3
