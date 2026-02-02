@@ -1,4 +1,15 @@
 <?php
+/**
+ * HR4 Hospital HR Management System
+ * Dashboard Page
+ */
+
+require_once 'config.php';
+require_once 'SessionManager.php';
+
+// Initialize session and check authentication
+SessionManager::init();
+SessionManager::requireLogin();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -508,12 +519,6 @@
     </div>
 
     <!-- Global Button & API Handler Utilities -->
-    <script>
-        // API Configuration
-        const API_BASE_URL = '/hospital_4/api';
-
-        // Update script sources to use public paths
-    </script>
     <script src="public/assets/js/button-handler.js?v=1.0"></script>
     <script src="public/assets/js/button-handlers-map.js?v=1.0"></script>
     <script src="public/assets/js/onclick-handlers.js?v=1.0"></script>

@@ -5,7 +5,15 @@
  * Clears session and invalidates token
  */
 
-session_start();
+// Load configuration and session manager
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../SessionManager.php';
+
+// Initialize session
+SessionManager::init();
+
+// Set response header
+header('Content-Type: application/json');
 
 // Only accept POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -13,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     die(json_encode(['success' => false, 'message' => 'Method not allowed']));
 }
 
-// Clear session variables
-$_SESSION = [];
-session_destroy();
+// Clear session using SessionManager
+SessionManager::destroy();
 
+// Return success response
 http_response_code(200);
 echo json_encode([
     'success' => true,
@@ -24,3 +32,4 @@ echo json_encode([
 ]);
 exit;
 ?>
+

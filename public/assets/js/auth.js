@@ -83,12 +83,12 @@ async function handleLogin(e) {
             formMessage.classList.add('show', 'success');
             formMessage.textContent = '✓ Login successful! Redirecting...';
             
-            console.log('%c[Auth] REDIRECTING TO dashboard.html in 1 second...', 'color: blue; font-weight: bold;');
+            console.log('%c[Auth] REDIRECTING TO dashboard.php in 1 second...', 'color: blue; font-weight: bold;');
             
             // Redirect to dashboard
             setTimeout(() => {
                 console.log('%c[Auth] NOW redirecting...', 'color: blue');
-                window.location.href = 'dashboard.html';
+                window.location.href = 'dashboard.php';
             }, 1000);
         } else {
             console.error('%c[Auth] ✗ LOGIN FAILED', 'color: red; font-weight: bold;');
@@ -106,20 +106,34 @@ async function handleLogin(e) {
 }
 
 function logout() {
+    // Clear client-side storage
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     
+    console.log('[Auth] Logout requested');
+    
     // Call logout API endpoint to clear server session
-    fetch('/hospital_4/api/auth/logout', {
+    fetch('/hospital_4/api/auth/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
-    }).then(() => {
-        window.location.href = 'login.html';
+    }).then(response => {
+        console.log('[Auth] Logout response:', response.status);
+        // Redirect to login regardless of response
+        redirectToLogin();
     }).catch(error => {
-        console.error('Logout error:', error);
+        console.error('[Auth] Logout error:', error);
         // Still redirect even if logout fails
-        window.location.href = 'login.html';
+        redirectToLogin();
     });
 }
+
+/**
+ * Redirect to login page
+ */
+function redirectToLogin() {
+    console.log('[Auth] Redirecting to index.php');
+    window.location.href = 'index.php';
+}
+

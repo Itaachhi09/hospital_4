@@ -1,4 +1,15 @@
 <?php
+/**
+ * HR4 Hospital HR Management System
+ * Analytics Dashboard Page
+ */
+
+require_once 'config.php';
+require_once 'SessionManager.php';
+
+// Initialize session and check authentication
+SessionManager::init();
+SessionManager::requireLogin();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -773,8 +784,9 @@
 
         function renderCompensationBreakdown() {
             const tbody = document.getElementById('compensationBody');
+            
             if (!dashboardData.widgets.compensation_breakdown) {
-                tbody.innerHTML = '<tr><td colspan="6">No position data available</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
                 return;
             }
 

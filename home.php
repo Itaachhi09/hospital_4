@@ -1,4 +1,9 @@
 <?php
+/**
+ * HR4 Hospital HR Management System
+ * Home/Welcome Page
+ */
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,8 +18,8 @@
         <div class="container">
             <h1>🏥 HR4</h1>
             <nav>
-                <a href="index.php">Home</a>
-                <a href="login.php">Sign In</a>
+                <a href="home.php">Home</a>
+                <a href="index.php">Sign In</a>
             </nav>
         </div>
     </div>
@@ -24,7 +29,7 @@
             <h2>Welcome to HR4</h2>
             <p>Healthcare HR Management System</p>
             <p style="color: #cbd5e1; margin-bottom: 2rem;">Comprehensive solution for managing employees, payroll, benefits, and analytics</p>
-            <a href="login.php" class="btn btn-primary">Get Started</a>
+            <a href="index.php" class="btn btn-primary">Get Started</a>
         </section>
 
         <section class="features">
@@ -80,6 +85,5 @@
         <p>&copy; 2026 HR4 Hospital HR Management System. All rights reserved.</p>
     </footer>
 
-    <script src="public/assets/js/main.js"></script>
 </body>
 </html>
