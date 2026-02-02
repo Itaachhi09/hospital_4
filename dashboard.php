@@ -1,10 +1,12 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Healthcare HR Management System</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="public/assets/css/style.css">
     <!-- Chart.js for dashboard visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -506,10 +508,16 @@
     </div>
 
     <!-- Global Button & API Handler Utilities -->
-    <script src="assets/js/button-handler.js?v=1.0"></script>
-    <script src="assets/js/button-handlers-map.js?v=1.0"></script>
-    <script src="assets/js/onclick-handlers.js?v=1.0"></script>
-    <script src="assets/js/compensation-module.js?v=2.0"></script>
-    <script src="assets/js/dashboard.js?v=2.2"></script>
+    <script>
+        // API Configuration
+        const API_BASE_URL = '/hospital_4/api';
+
+        // Update script sources to use public paths
+    </script>
+    <script src="public/assets/js/button-handler.js?v=1.0"></script>
+    <script src="public/assets/js/button-handlers-map.js?v=1.0"></script>
+    <script src="public/assets/js/onclick-handlers.js?v=1.0"></script>
+    <script src="public/assets/js/compensation-module.js?v=2.0"></script>
+    <script src="public/assets/js/dashboard.js?v=2.2"></script>
 </body>
 </html>

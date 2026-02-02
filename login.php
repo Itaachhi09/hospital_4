@@ -61,6 +61,43 @@
         </div>
     </div>
 
+    <script>
+        const API_BASE = '/hospital_4/api';
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password, remember })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    sessionStorage.setItem('authToken', data.authToken);
+                    if (remember) {
+                        localStorage.setItem('authToken', data.authToken);
+                    }
+                    window.location.href = 'dashboard.php';
+                } else {
+                    document.getElementById('formMessage').textContent = data.message || 'Login failed';
+                    document.getElementById('formMessage').style.color = '#ef4444';
+                }
+            } catch (error) {
+                document.getElementById('formMessage').textContent = 'Connection error: ' + error.message;
+                document.getElementById('formMessage').style.color = '#ef4444';
+            }
+        });
+    </script>
     <script src="public/assets/js/auth.js"></script>
 </body>
 </html>

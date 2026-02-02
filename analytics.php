@@ -1,3 +1,5 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -651,13 +653,6 @@
 
         // Initialize dashboard
         async function initializeDashboard() {
-            // Don't require token for testing - comment out in production
-            // const token = localStorage.getItem('authToken');
-            // if (!token) {
-            //     window.location.href = '/hospital_4/public/login.html';
-            //     return;
-            // }
-
             await loadDashboardData();
             await loadDepartmentFilter();
         }
@@ -667,7 +662,6 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/v1/analytics/dashboard`, {
                     headers: {
-                        // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -779,10 +773,8 @@
 
         function renderCompensationBreakdown() {
             const tbody = document.getElementById('compensationBody');
-            
-            // Group by position from compensation analysis
             if (!dashboardData.widgets.compensation_breakdown) {
-                tbody.innerHTML = '<tr><td colspan="6">No data available</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6">No position data available</td></tr>';
                 return;
             }
 
