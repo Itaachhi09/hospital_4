@@ -3,8 +3,8 @@
  * Manages login, logout, and token management
  */
 
-// API base URL - deployed to domain
-const API_BASE_URL = '/api';
+// API base URL - files are in /hospital_4/api/ folder
+const API_BASE_URL = '/hospital_4/api';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
@@ -91,7 +91,7 @@ async function handleLogin(e) {
             // Redirect to dashboard
             setTimeout(() => {
                 console.log('%c[Auth] NOW redirecting...', 'color: blue');
-                window.location.href = 'dashboard.php';
+                window.location.href = '/hospital_4/dashboard.php';
             }, 1000);
         } else {
             console.error('%c[Auth] ✗ LOGIN FAILED', 'color: red; font-weight: bold;');
@@ -109,21 +109,23 @@ async function handleLogin(e) {
 }
 
 function logout() {
-    // Clear client-side storage
+    // Clear client-side storage first
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     
     console.log('[Auth] Logout requested');
     
-    // Call logout API endpoint to clear server session
-    fetch(window.getApiUrl('/auth/logout'), {
+    // Call logout API endpoint to clear server session and user account
+    fetch(API_BASE_URL + '/auth/logout.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '')
+        },
+        credentials: 'include'
     }).then(response => {
-        console.log('[Auth] Logout response:', response.status);
-        // Redirect to login regardless of response
+        console.log('[Auth] Server logout response:', response.status);
+        // Redirect to login page regardless of response
         redirectToLogin();
     }).catch(error => {
         console.error('[Auth] Logout error:', error);
@@ -136,7 +138,7 @@ function logout() {
  * Redirect to login page
  */
 function redirectToLogin() {
-    console.log('[Auth] Redirecting to login');
-    window.location.href = '/';
+    console.log('[Auth] Redirecting to login page');
+    window.location.href = '/hospital_4/index.php';
 }
 
