@@ -2,9 +2,9 @@
  * Shared Utilities for Hospital HR Management System
  */
 
-export const API_BASE_URL = '/hospital_4/api';
+export const API_BASE_URL = '/api';
 export const REST_API_URL = `${API_BASE_URL}/`;
-export const LEGACY_API_URL = '/hospital_4/api/Employees/';
+export const LEGACY_API_URL = '/api/Employees/';
 
 /**
  * Get authentication token from localStorage
@@ -73,7 +73,7 @@ export async function handleApiResponse(response) {
     if (response.status === 401) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
-        window.location.href = '/hospital_4/index.php';
+        window.location.href = '/index.php';
         return null;
     }
 

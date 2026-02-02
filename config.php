@@ -17,11 +17,11 @@ define('SESSION_USER_NAME_KEY', 'user_name');
 define('SESSION_USER_ROLE_KEY', 'user_role');
 define('SESSION_AUTH_TOKEN_KEY', 'auth_token');
 
-// Redirect paths (relative to root)
-define('LOGIN_PAGE', 'index.php');
-define('DASHBOARD_PAGE', 'dashboard.php');
-define('HOME_PAGE', 'home.php');
-define('ANALYTICS_PAGE', 'analytics-dashboard.php');
+// Redirect paths (absolute paths for proper deployment)
+define('LOGIN_PAGE', '/index.php');
+define('DASHBOARD_PAGE', '/dashboard.php');
+define('HOME_PAGE', '/home.php');
+define('ANALYTICS_PAGE', '/analytics-dashboard.php');
 
 // API configuration
 define('API_BASE_URL', '/api');

@@ -109,13 +109,9 @@ async function handleLogin(e) {
 }
 
 function logout() {
-    // Clear client-side storage first
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    
     console.log('[Auth] Logout requested');
     
-    // Call logout API endpoint to clear server session and user account
+    // Send logout request to server FIRST (with auth token still in localStorage)
     fetch(API_BASE_URL + '/auth/logout.php', {
         method: 'POST',
         headers: {
@@ -125,11 +121,18 @@ function logout() {
         credentials: 'include'
     }).then(response => {
         console.log('[Auth] Server logout response:', response.status);
-        // Redirect to login page regardless of response
+        // THEN clear client-side storage AFTER server response
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        sessionStorage.clear();
+        // Redirect to login page
         redirectToLogin();
     }).catch(error => {
         console.error('[Auth] Logout error:', error);
-        // Still redirect even if logout fails
+        // Still clear local storage and redirect even if logout fails
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        sessionStorage.clear();
         redirectToLogin();
     });
 }
