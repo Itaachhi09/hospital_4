@@ -519,6 +519,7 @@ SessionManager::requireLogin();
     </div>
 
     <!-- Global Button & API Handler Utilities -->
+    <script src="public/assets/js/main.js?v=1.0"></script>
     <script src="public/assets/js/button-handler.js?v=1.0"></script>
     <script src="public/assets/js/button-handlers-map.js?v=1.0"></script>
     <script src="public/assets/js/onclick-handlers.js?v=1.0"></script>

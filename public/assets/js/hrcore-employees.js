@@ -154,7 +154,7 @@ function setupEmployeeEventListeners() {
  */
 async function loadDepartments() {
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=departments`, {
+        const response = await fetch(window.getApiUrl('/HRCORE/?resource=departments'), {
             credentials: 'include'
         });
         
@@ -217,7 +217,7 @@ async function loadEmployees() {
         if (department) params.append('department_id', department);
         if (employmentType) params.append('employment_type', employmentType);
         
-        const url = `${API_BASE_URL}/HRCORE/?${params.toString()}`;
+        const url = window.getApiUrl(`/HRCORE/?${params.toString()}`);
         
         const response = await fetch(url, {
             credentials: 'include'
@@ -444,7 +444,7 @@ window.showEmployeeMenu = function(event, employeeId, isArchived = false) {
 
 window.viewEmployee = async function(employeeId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=employees&id=${employeeId}`, {
+        const response = await fetch(window.getApiUrl(`/HRCORE/?resource=employees&id=${employeeId}`), {
             credentials: 'include'
         });
         
@@ -461,7 +461,7 @@ window.viewEmployee = async function(employeeId) {
 
 window.editEmployee = async function(employeeId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=employees&id=${employeeId}`, {
+        const response = await fetch(window.getApiUrl(`/HRCORE/?resource=employees&id=${employeeId}`), {
             credentials: 'include'
         });
         
@@ -482,7 +482,7 @@ window.deleteEmployee = async function(employeeId) {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=employees&id=${employeeId}`, {
+        const response = await fetch(window.getApiUrl(`/HRCORE/?resource=employees&id=${employeeId}`), {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -505,7 +505,7 @@ window.restoreEmployee = async function(employeeId) {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=employees&id=${employeeId}&action=restore`, {
+        const response = await fetch(window.getApiUrl(`/HRCORE/?resource=employees&id=${employeeId}&action=restore`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -532,7 +532,7 @@ window.permanentlyDeleteEmployee = async function(employeeId) {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/HRCORE/?resource=employees&id=${employeeId}&permanent=true`, {
+        const response = await fetch(window.getApiUrl(`/HRCORE/?resource=employees&id=${employeeId}&permanent=true`), {
             method: 'DELETE',
             credentials: 'include'
         });

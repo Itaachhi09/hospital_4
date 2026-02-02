@@ -536,7 +536,7 @@ function closeNotificationDropdown() {
 
 async function loadDropdownNotifications() {
     try {
-        const response = await fetch('/hospital_4/api/notifications/?per_page=5&filter=all');
+        const response = await fetch(window.getApiUrl('/notifications/?per_page=5&filter=all'));
         const result = await response.json();
 
         if (result.success) {

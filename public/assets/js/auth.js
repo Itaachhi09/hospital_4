@@ -54,10 +54,10 @@ async function handleLogin(e) {
         return;
     }
     
-    console.log('[Auth] Submitting login request to ' + API_BASE_URL + '/auth/login');
+    console.log('[Auth] Submitting login request to ' + API_BASE_URL + '/auth/login.php');
     
     try {
-        const response = await fetch(API_BASE_URL + '/auth/login', {
+        const response = await fetch(API_BASE_URL + '/auth/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -128,7 +128,7 @@ function logout() {
     console.log('[Auth] Logout requested');
     
     // Call logout API endpoint to clear server session
-    fetch(API_BASE_URL + '/auth/logout', {
+    fetch(API_BASE_URL + '/auth/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

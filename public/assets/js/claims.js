@@ -1,7 +1,13 @@
 import { REST_API_URL } from '../../utils.js';
 
 // Get LEGACY_API_URL from window or utils
-const LEGACY_API_URL = '/hospital_4/api/Employees/';
+// Get LEGACY_API_URL from window or use dynamic fallback
+const LEGACY_API_URL = (function() {
+    if (window.API_BASE_URL) {
+        return window.API_BASE_URL + '/Employees/';
+    }
+    return '/hospital_4/api/Employees/';
+})();
 
 // Primary renderer for HMO Claims admin section
 export async function displayHMOClaimsSection() {

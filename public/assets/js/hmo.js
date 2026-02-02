@@ -5,7 +5,7 @@
 
 import { showEnhancedConfirmationModal, showInlineAlert, showLoadingState, showEmptyState, showErrorState, closeModal, openModal, getStatusBadge } from './payroll-modals.js';
 
-const API_BASE_URL = '/hospital_4/api';
+const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
 const REST_API_URL = `${API_BASE_URL}/`;
 
 let hmoProvidersCache = [];

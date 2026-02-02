@@ -1135,7 +1135,7 @@ window.downloadHRCoreDocument = function(docId) {
     
     // Generate a download link
     const link = document.createElement('a');
-    link.href = '/hospital_4/api/HRCORE/documents.php?id=' + docId + '&action=download';
+    link.href = window.getApiUrl('/HRCORE/documents?id=' + docId + '&action=download');
     link.download = (doc.document_title || 'document') + '.pdf';
     document.body.appendChild(link);
     link.click();

@@ -1,7 +1,12 @@
 import { REST_API_URL } from '../../utils.js';
 
 // Get LEGACY_API_URL from window or utils
-const LEGACY_API_URL = '/hospital_4/api/Employees/';
+const LEGACY_API_URL = (function() {
+    if (window.API_BASE_URL) {
+        return window.API_BASE_URL + '/Employees/';
+    }
+    return '/hospital_4/api/Employees/';
+})();
 
 export async function displayHMOEnrollmentsSection() {
     const container = document.getElementById('hmoEnrollmentsContainer');

@@ -4,9 +4,71 @@
  * Global Configuration & Button Initialization
  */
 
-// Set global API base URL for all modules
-window.REST_API_URL = '/hospital_4/api/';
-window.API_BASE_URL = '/hospital_4/api';
+// Set global API base URL for all modules (detect local vs domain deployment)
+function getApiBaseUrl() {
+    const path = window.location.pathname;
+    
+    // If path contains /hospital_4/, we're in local dev
+    if (path.includes('/hospital_4/')) {
+        return '/hospital_4/api';
+    }
+    
+    // Otherwise, assume deployed to domain root
+    return '/api';
+}
+
+const apiBaseUrl = getApiBaseUrl();
+window.REST_API_URL = apiBaseUrl + '/';
+window.API_BASE_URL = apiBaseUrl;
+
+/**
+ * Helper function to build API endpoint URLs with .php extension for LiteSpeed compatibility
+ * @param {string} endpoint - The endpoint path (e.g., '/auth/login', '/HRCORE/', 'notifications/')
+ * @returns {string} - The complete API URL with .php extension if needed
+ */
+window.getApiUrl = function(endpoint) {
+    // Ensure endpoint starts with /
+    if (!endpoint.startsWith('/')) {
+        endpoint = '/' + endpoint;
+    }
+    
+    // Build the full URL
+    let url = apiBaseUrl + endpoint;
+    
+    // Add .php extension if not already present and not a directory/query
+    if (!url.includes('?') && !url.endsWith('.php') && !url.endsWith('/')) {
+        url += '.php';
+    } else if (url.includes('?') && !url.split('?')[0].endsWith('.php') && !url.split('?')[0].endsWith('/')) {
+        // If there's a query string, add .php before the ?
+        const [path, query] = url.split('?');
+        url = path + '.php?' + query;
+    }
+    
+    return url;
+};
+
+/**
+ * Monkey-patch fetch to automatically append .php to API endpoints
+ * This ensures LiteSpeed compatibility without rewriting .htaccess rules
+ */
+const originalFetch = window.fetch;
+window.fetch = function(resource, config) {
+    // If resource is a string (not a Request object), process it
+    if (typeof resource === 'string') {
+        // Check if it looks like an API call (contains /api/)
+        if (resource.includes('/api/') || resource.includes(apiBaseUrl)) {
+            // Don't add .php twice
+            if (!resource.includes('?') && !resource.endsWith('.php') && !resource.endsWith('/')) {
+                resource += '.php';
+            } else if (resource.includes('?') && !resource.split('?')[0].endsWith('.php') && !resource.split('?')[0].endsWith('/')) {
+                // If there's a query string, add .php before the ?
+                const [path, query] = resource.split('?');
+                resource = path + '.php?' + query;
+            }
+        }
+    }
+    return originalFetch.call(this, resource, config);
+};
 
 // Global error handler
 window.addEventListener('error', function(event) {

@@ -74,6 +74,9 @@ SessionManager::redirectIfAuthenticated();
         </div>
     </div>
 
+    <!-- Load main.js FIRST for API configuration -->
+    <script src="public/assets/js/main.js"></script>
+    <!-- Then load auth-specific scripts -->
     <script src="public/assets/js/auth.js"></script>
 </body>
 </html>

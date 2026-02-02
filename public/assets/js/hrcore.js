@@ -9,7 +9,7 @@ let departmentNameToId = {};
 let departmentIdToName = {};
 let currentSort = { key: null, dir: 'asc' };
 let searchDebounceTimer;
-const API_BASE_URL = '/hospital_4/api';
+const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
 const HRCORE_API = `${API_BASE_URL}/HRCORE/employees.php`;
 const HRCORE_DOCS_API = `${API_BASE_URL}/HRCORE/documents.php`;
 
