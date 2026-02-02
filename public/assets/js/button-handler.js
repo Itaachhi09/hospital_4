@@ -135,7 +135,7 @@ class ButtonHandler {
  * API Handler - Standardized API requests
  */
 class APIHandler {
-    static apiBase = window.REST_API_URL || 'http://localhost/hospital_4/api/';
+    static apiBase = window.REST_API_URL || 'http://localhost/api/';
     
     /**
      * Make authenticated API request

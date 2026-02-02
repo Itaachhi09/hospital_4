@@ -3,8 +3,8 @@
  * Manages login, logout, and token management
  */
 
-// API base URL - files are in /hospital_4/api/ folder
-const API_BASE_URL = '/hospital_4/api';
+// API base URL - deployed to domain root
+const API_BASE_URL = '/api';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
@@ -91,7 +91,7 @@ async function handleLogin(e) {
             // Redirect to dashboard
             setTimeout(() => {
                 console.log('%c[Auth] NOW redirecting...', 'color: blue');
-                window.location.href = '/hospital_4/dashboard.php';
+                window.location.href = '/dashboard.php';
             }, 1000);
         } else {
             console.error('%c[Auth] ✗ LOGIN FAILED', 'color: red; font-weight: bold;');
@@ -139,6 +139,6 @@ function logout() {
  */
 function redirectToLogin() {
     console.log('[Auth] Redirecting to login page');
-    window.location.href = '/hospital_4/index.php';
+    window.location.href = '/index.php';
 }
 

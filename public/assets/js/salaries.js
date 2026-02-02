@@ -269,7 +269,7 @@ async function loadSalaries() {
 
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/hospital_4/index.php';
+                window.location.href = '/index.php';
                 return;
             }
             throw new Error(`HTTP error! status: ${response.status}`);

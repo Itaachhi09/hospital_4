@@ -437,7 +437,7 @@ window.viewDocument = async function(documentId) {
 };
 
 window.downloadDocument = function(documentId, filePath) {
-    const url = `/hospital_4/${filePath}`;
+    const url = `/${filePath}`;
     window.open(url, '_blank');
 };
 

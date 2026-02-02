@@ -29,7 +29,7 @@ require_once __DIR__ . '/middlewares/AuthMiddleware.php';
 // Simple routing
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = str_replace('/hospital_4/api', '', $path);
+$path = str_replace('/api', '', $path);
 $path = trim($path, '/');
 
 // Remove .php extension if present (for direct file access like /analytics/analytics.php)

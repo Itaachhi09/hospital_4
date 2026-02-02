@@ -53,7 +53,7 @@ class APIRouter {
      */
     private function parseRequest() {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $path = str_replace('/hospital_4/api', '', $path);
+        $path = str_replace('/api', '', $path);
         $path = trim($path, '/');
         
         // Extract API version from path (/api/v1/... or /api/v2/...)

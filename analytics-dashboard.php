@@ -659,7 +659,7 @@ SessionManager::requireLogin();
     </div>
 
     <script>
-        const API_BASE_URL = '/hospital_4/api';
+        const API_BASE_URL = '/api';
         let dashboardData = null;
 
         // Initialize dashboard

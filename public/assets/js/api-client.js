@@ -5,7 +5,7 @@
  */
 
 class APIClient {
-    constructor(baseURL = 'http://localhost/hospital_4/api') {
+    constructor(baseURL = 'http://localhost/api') {
         this.baseURL = baseURL;
         this.csrfToken = null;
         this.loadCSRFToken();
@@ -52,7 +52,7 @@ class APIClient {
                 // Token expired or invalid
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('userData');
-                window.location.href = '/hospital_4/index.php';
+                window.location.href = '/index.php';
                 return null;
             }
             

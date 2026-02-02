@@ -24,7 +24,7 @@ define('HOME_PAGE', 'home.php');
 define('ANALYTICS_PAGE', 'analytics-dashboard.php');
 
 // API configuration
-define('API_BASE_URL', '/hospital_4/api');
+define('API_BASE_URL', '/api');
 define('JWT_SECRET', 'your-secret-key-change-this-in-production');
 define('JWT_ALGORITHM', 'HS256');
 define('JWT_EXPIRATION', 3600); // 1 hour

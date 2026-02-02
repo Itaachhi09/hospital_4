@@ -10,7 +10,7 @@ define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // development, staging, production
 
 // API Settings
-define('API_BASE_URL', 'http://localhost/hospital_4/api');
+define('API_BASE_URL', 'http://localhost/api');
 define('API_TIMEOUT', 30);
 
 // JWT Settings

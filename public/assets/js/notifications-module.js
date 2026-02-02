@@ -4,7 +4,7 @@
  * v1.0 - Professional notification dashboard with filtering
  */
 
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const API_BASE_URL = window.API_BASE_URL || '/api';
 const REST_API_URL = `${API_BASE_URL}/`;
 
 let mainContentArea;

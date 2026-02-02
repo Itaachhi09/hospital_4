@@ -35,7 +35,7 @@ if (!$conn || $conn->connect_error) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = str_replace('/hospital_4/api', '', $path);
+$path = str_replace('/api', '', $path);
 $path = trim($path, '/');
 
 // Parse route

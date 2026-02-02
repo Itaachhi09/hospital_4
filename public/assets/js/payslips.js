@@ -359,7 +359,7 @@ async function loadPayslips() {
         
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/hospital_4/index.php';
+                window.location.href = '/index.php';
                 return;
             }
             // If 404, it means no payslips exist yet - treat as empty list

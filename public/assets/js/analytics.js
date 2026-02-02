@@ -6,7 +6,7 @@
 
 import { LEGACY_API_URL, REST_API_URL } from '../utils.js';
 
-const API_BASE_URL = '/hospital_4/api';
+const API_BASE_URL = '/api';
 
 // Chart instances for cleanup
 let chartInstances = {};
@@ -791,7 +791,7 @@ async function displayAnalyticsReports() {
         
         if (!authToken || !userData.id) {
             console.warn('[Analytics] User not authenticated');
-            window.location.href = '/hospital_4/index.php';
+            window.location.href = '/index.php';
             return;
         }
         
@@ -879,7 +879,7 @@ async function displayAnalyticsMetrics() {
         
         if (!authToken || !userData.id) {
             console.warn('[Analytics] User not authenticated');
-            window.location.href = '/hospital_4/index.php';
+            window.location.href = '/index.php';
             return;
         }
         

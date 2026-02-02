@@ -412,7 +412,7 @@ async function loadAnalyticsDashboard() {
     
     if (!authToken || !userData.id) {
         console.warn('User not authenticated, redirecting to login');
-        window.location.href = '/hospital_4/index.php';
+        window.location.href = '/index.php';
         return;
     }
     
@@ -509,7 +509,7 @@ function toggleMenuSection(element) {
 function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
-    window.location.href = '/hospital_4/';
+    window.location.href = '/';
 }
 
 /**
@@ -668,7 +668,7 @@ function runDashboardInit() {
             console.error('%c[Dashboard] FAIL: No token found', 'color: red; font-weight: bold;');
             debug('❌ NO TOKEN FOUND');
             localStorage.clear();
-            setTimeout(() => { window.location.href = '/hospital_4/index.php'; }, 100);
+            setTimeout(() => { window.location.href = '/index.php'; }, 100);
             return false;
         }
         
@@ -679,7 +679,7 @@ function runDashboardInit() {
             console.error('%c[Dashboard] FAIL: No user data found', 'color: red; font-weight: bold;');
             debug('❌ NO USER DATA FOUND');
             localStorage.clear();
-            setTimeout(() => { window.location.href = '/hospital_4/index.php'; }, 100);
+            setTimeout(() => { window.location.href = '/index.php'; }, 100);
             return false;
         }
         
@@ -696,7 +696,7 @@ function runDashboardInit() {
             console.error('[Dashboard] FAIL: Invalid JSON', parseError);
             debug('❌ INVALID JSON: ' + parseError.message);
             localStorage.clear();
-            setTimeout(() => { window.location.href = '/hospital_4/index.php'; }, 100);
+            setTimeout(() => { window.location.href = '/index.php'; }, 100);
             return false;
         }
         
@@ -750,7 +750,7 @@ function runDashboardInit() {
         console.error('%c[Dashboard] CRITICAL ERROR', 'color: red; font-weight: bold;', error);
         debug('❌ CRITICAL: ' + error.message);
         localStorage.clear();
-        setTimeout(() => { window.location.href = '/hospital_4/index.php'; }, 100);
+        setTimeout(() => { window.location.href = '/index.php'; }, 100);
         return false;
     }
 }

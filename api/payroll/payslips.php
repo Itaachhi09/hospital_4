@@ -353,7 +353,7 @@ function handleBatchPdf() {
         foreach ($payslipIds as $id) {
             $downloadUrls[] = [
                 'payslip_id' => $id,
-                'download_url' => '/hospital_4/api/payroll/payslips.php?id=' . urlencode($id) . '&action=pdf'
+                'download_url' => '/api/payroll/payslips.php?id=' . urlencode($id) . '&action=pdf'
             ];
         }
         

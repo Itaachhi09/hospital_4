@@ -782,7 +782,7 @@ window.logout = function() {
     if (confirm('Are you sure you want to log out?')) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
-        window.location.href = '/hospital_4/index.php';
+        window.location.href = '/index.php';
     }
 };
 
