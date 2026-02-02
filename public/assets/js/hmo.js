@@ -32,7 +32,7 @@ export async function displayHMOProvidersSection() {
 
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/hospital_4/public/login.html';
+                window.location.href = '/hospital_4/index.php';
                 return;
             }
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -543,7 +543,7 @@ export async function displayHMOPlansSection() {
 
         if (!response.ok) {
             if (response.status === 401) {
-                window.location.href = '/hospital_4/public/login.html';
+                window.location.href = '/hospital_4/index.php';
                 return;
             }
             throw new Error(`HTTP error! status: ${response.status}`);

@@ -73,7 +73,7 @@ export async function handleApiResponse(response) {
     if (response.status === 401) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
-        window.location.href = '/hospital_4/public/login.html';
+        window.location.href = '/hospital_4/index.php';
         return null;
     }
 

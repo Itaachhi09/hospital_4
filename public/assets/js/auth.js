@@ -3,6 +3,21 @@
  * Manages login, logout, and token management
  */
 
+// Detect API base URL dynamically for both local and domain deployments
+function getApiBaseUrl() {
+    const path = window.location.pathname;
+    
+    // If path contains /hospital_4/, we're in local dev
+    if (path.includes('/hospital_4/')) {
+        return '/hospital_4/api';
+    }
+    
+    // Otherwise, assume deployed to domain root
+    return '/api';
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     
@@ -39,10 +54,10 @@ async function handleLogin(e) {
         return;
     }
     
-    console.log('[Auth] Submitting login request to /hospital_4/api/auth/login.php');
+    console.log('[Auth] Submitting login request to ' + API_BASE_URL + '/auth/login');
     
     try {
-        const response = await fetch('/hospital_4/api/auth/login.php', {
+        const response = await fetch(API_BASE_URL + '/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -113,7 +128,7 @@ function logout() {
     console.log('[Auth] Logout requested');
     
     // Call logout API endpoint to clear server session
-    fetch('/hospital_4/api/auth/logout.php', {
+    fetch(API_BASE_URL + '/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

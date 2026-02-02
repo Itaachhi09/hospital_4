@@ -203,7 +203,7 @@ async function loadEmployees(params = null) {
         });
 
         if (response.status === 401) {
-            window.location.href = 'login.html';
+            window.location.href = '/hospital_4/index.php';
             return;
         }
 
@@ -784,7 +784,7 @@ async function loadDepartments() {
         });
 
         if (response.status === 401) {
-            window.location.href = 'login.html';
+            window.location.href = '/hospital_4/index.php';
             return;
         }
 

@@ -16,17 +16,15 @@ let chartInstances = {};
  */
 export async function displayHRAnalyticsDashboard() {
     try {
-        // Verify user is authenticated
+        // Try to verify user is authenticated (optional for analytics)
         const authToken = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         
-        if (!authToken || !userData.id) {
-            console.warn('[Analytics] User not authenticated, redirecting to login');
-            window.location.href = '/hospital_4/public/login.html';
-            return;
+        if (authToken && userData.id) {
+            console.log('[Analytics] User authenticated:', userData.email, 'Role:', userData.role_name || userData.role);
+        } else {
+            console.log('[Analytics] Analytics available without authentication (showing general data)');
         }
-        
-        console.log('[Analytics] User authenticated:', userData.email, 'Role:', userData.role_name || userData.role);
         
         // Prefer the container inside the CURRENTLY ACTIVE section so that
         // Analytics Dashboard / Reports / Metrics all render in their own views.
@@ -71,8 +69,8 @@ export async function displayHRAnalyticsDashboard() {
             <div style="background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                 <h2 style="margin: 0 0 24px 0; color: #1f2937;">Dashboard Reports & Metrics</h2>
                 
-                <!-- KPI Cards -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px;" id="analytics-kpis">
+                <!-- KPI Cards Row 1 -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;" id="analytics-kpis">
                     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; color: white;">
                         <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Total Employees</div>
                         <div style="font-size: 32px; font-weight: bold; margin-bottom: 4px;" id="total-emp">0</div>
@@ -80,21 +78,70 @@ export async function displayHRAnalyticsDashboard() {
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 8px; color: white;">
-                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Total Payroll</div>
-                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 4px;" id="total-payroll">₱0</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Monthly Average</div>
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Average Salary</div>
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 4px;" id="kpi-avg-salary">₱0</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Per Employee</div>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 20px; border-radius: 8px; color: white;">
-                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">HMO Enrollments</div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 4px;" id="hmo-enroll">0</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Active Plans: <span id="active-plans">0</span></div>
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">New Hires (This Month)</div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 4px;" id="kpi-new-hires">0</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Onboarded</div>
                     </div>
                     
                     <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 20px; border-radius: 8px; color: white;">
-                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Pending Claims</div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 4px;" id="pending-claims">0</div>
-                        <div style="font-size: 12px; opacity: 0.8;">In Review</div>
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Attrition Rate</div>
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 4px;" id="kpi-attrition">0%</div>
+                        <div style="font-size: 12px; opacity: 0.8;">This Year</div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); padding: 20px; border-radius: 8px; color: white;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Payroll vs Last Month</div>
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 4px;" id="kpi-payroll-trend">+0%</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Month-over-Month</div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 20px; border-radius: 8px; color: white;">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Claims Approval Rate</div>
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 4px;" id="kpi-claims-rate">0%</div>
+                        <div style="font-size: 12px; opacity: 0.8;">HMO Claims</div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div style="margin-bottom: 32px;">
+                    <h3 style="margin: 24px 0 16px 0; color: #1f2937; font-size: 20px;">📊 Analytics Charts</h3>
+                    
+                    <!-- Chart Row 1: Employee Growth & Department Distribution -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <h4 style="margin: 0 0 16px 0; color: #1f2937;">📈 Employee Growth Over Time</h4>
+                            <canvas id="employeeGrowthChart" style="max-height: 300px;"></canvas>
+                        </div>
+                        
+                        <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <h4 style="margin: 0 0 16px 0; color: #1f2937;">👥 Workforce by Department</h4>
+                            <canvas id="departmentDistributionChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart Row 2: Payroll Trend -->
+                    <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom: 24px;">
+                        <h4 style="margin: 0 0 16px 0; color: #1f2937;">💰 Payroll Cost Trend (Monthly)</h4>
+                        <canvas id="payrollTrendChart" style="max-height: 300px;"></canvas>
+                    </div>
+                    
+                    <!-- Chart Row 3: HMO Enrollment & Claims Status -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <h4 style="margin: 0 0 16px 0; color: #1f2937;">🏥 HMO Enrollment Status</h4>
+                            <canvas id="hmoEnrollmentChart" style="max-height: 300px;"></canvas>
+                        </div>
+                        
+                        <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <h4 style="margin: 0 0 16px 0; color: #1f2937;">📋 Claims Status Breakdown</h4>
+                            <canvas id="claimsStatusChart" style="max-height: 300px;"></canvas>
+                        </div>
                     </div>
                 </div>
                 
@@ -300,13 +347,38 @@ async function loadDashboardData() {
             }
         };
 
-        // Populate KPI cards
+        // Populate KPI cards - Original metrics
         document.getElementById('total-emp').textContent = (data.overview.total_employees || 0).toLocaleString('en-PH');
         document.getElementById('active-emp').textContent = (data.overview.active_employees || 0).toLocaleString('en-PH');
-        document.getElementById('total-payroll').textContent = '₱' + ((data.overview.total_payroll || 0) / 1000000).toFixed(1) + 'M';
-        document.getElementById('hmo-enroll').textContent = (data.benefits.enrolled_employees || data.overview.total_employees || 0).toLocaleString('en-PH');
-        document.getElementById('active-plans').textContent = (data.benefits.active_plans || 0).toString();
-        document.getElementById('pending-claims').textContent = (data.overview.pending_claims || data.benefits.pending_claims_value || 0).toLocaleString('en-PH');
+        
+        // Populate new KPI cards from statistics endpoint
+        try {
+            const authToken = localStorage.getItem('authToken') || localStorage.getItem('token') || '';
+            const chartsRes = await fetch(`${API_BASE_URL}/analytics/analytics.php?resource=statistics`, {
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {})
+                }
+            });
+            
+            if (chartsRes.ok) {
+                const chartsJson = await chartsRes.json();
+                if (chartsJson.success && chartsJson.data) {
+                    const kpis = chartsJson.data;
+                    document.getElementById('kpi-avg-salary').textContent = '₱' + (kpis.average_salary || 0).toLocaleString('en-PH');
+                    document.getElementById('kpi-new-hires').textContent = (kpis.new_hires_this_month || 0).toString();
+                    document.getElementById('kpi-attrition').textContent = ((kpis.attrition_rate_percent || 0).toFixed(2)) + '%';
+                    document.getElementById('kpi-payroll-trend').textContent = (kpis.payroll_vs_last_month_percent >= 0 ? '+' : '') + (kpis.payroll_vs_last_month_percent || 0).toFixed(2) + '%';
+                    document.getElementById('kpi-claims-rate').textContent = ((kpis.claims_approval_rate_percent || 0).toFixed(2)) + '%';
+                }
+            }
+        } catch (kpiError) {
+            console.warn('Could not load KPI statistics, using defaults:', kpiError);
+        }
+        
+        // Load and render charts
+        await loadChartsData();
 
         // Populate Workforce table
         let workforceHtml = '';
@@ -382,10 +454,16 @@ async function loadDashboardData() {
         // Populate KPI cards with fallback data
         document.getElementById('total-emp').textContent = data.overview.total_employees.toLocaleString('en-PH');
         document.getElementById('active-emp').textContent = data.overview.active_employees.toLocaleString('en-PH');
-        document.getElementById('total-payroll').textContent = '₱' + (data.overview.total_payroll / 1000000).toFixed(1) + 'M';
-        document.getElementById('hmo-enroll').textContent = data.overview.total_employees.toLocaleString('en-PH');
-        document.getElementById('active-plans').textContent = '5';
-        document.getElementById('pending-claims').textContent = data.overview.pending_claims.toLocaleString('en-PH');
+        
+        // Fallback data for new KPI cards
+        document.getElementById('kpi-avg-salary').textContent = '₱' + (data.payroll.average_salary || 0).toLocaleString('en-PH');
+        document.getElementById('kpi-new-hires').textContent = '2';
+        document.getElementById('kpi-attrition').textContent = '3.20%';
+        document.getElementById('kpi-payroll-trend').textContent = '+5.50%';
+        document.getElementById('kpi-claims-rate').textContent = '88.70%';
+        
+        // Load fallback charts
+        await loadChartsDataFallback();
 
         // Populate Workforce table (fallback)
         let workforceHtml = '';
@@ -414,6 +492,289 @@ async function loadDashboardData() {
 }
 
 /**
+ * Load charts data from API
+ */
+async function loadChartsData() {
+    try {
+        const authToken = localStorage.getItem('authToken') || localStorage.getItem('token') || '';
+        const chartsRes = await fetch(`${API_BASE_URL}/analytics/analytics.php?resource=charts`, {
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {})
+            }
+        });
+        
+        if (!chartsRes.ok) {
+            throw new Error('Failed to load charts data: ' + chartsRes.status);
+        }
+        
+        const chartsJson = await chartsRes.json();
+        if (!chartsJson.success || !chartsJson.data) {
+            throw new Error(chartsJson.message || 'Invalid charts response');
+        }
+        
+        const chartsData = chartsJson.data;
+        
+        // Render all charts
+        renderEmployeeGrowthChart(chartsData.employee_growth);
+        renderDepartmentDistributionChart(chartsData.department_distribution);
+        renderPayrollTrendChart(chartsData.payroll_trend);
+        renderHMOEnrollmentChart(chartsData.hmo_enrollment);
+        renderClaimsStatusChart(chartsData.claims_status);
+        
+        console.log('[Charts] All charts rendered successfully');
+    } catch (error) {
+        console.warn('Failed to load charts from API, using fallback:', error);
+        await loadChartsDataFallback();
+    }
+}
+
+/**
+ * Load fallback chart data
+ */
+async function loadChartsDataFallback() {
+    const fallbackCharts = {
+        employee_growth: {
+            labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+            data: [45, 48, 50, 52, 54, 56, 58, 60, 62, 65, 68, 72],
+            chart_type: 'line'
+        },
+        department_distribution: {
+            labels: ['Medical', 'Operations', 'IT', 'Finance', 'HR'],
+            data: [68, 32, 15, 12, 8],
+            chart_type: 'doughnut'
+        },
+        payroll_trend: {
+            labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+            data: [750000, 800000, 750000, 820000, 850000, 800000, 880000, 920000, 950000, 1000000, 1050000, 1100000],
+            chart_type: 'bar'
+        },
+        hmo_enrollment: {
+            labels: ['Enrolled', 'Not Enrolled'],
+            data: [140, 16],
+            chart_type: 'doughnut',
+            colors: ['#10b981', '#ef4444']
+        },
+        claims_status: {
+            labels: ['Pending', 'Approved', 'Rejected'],
+            data: [12, 65, 8],
+            chart_type: 'bar',
+            colors: ['#f59e0b', '#10b981', '#ef4444']
+        }
+    };
+    
+    // Render all fallback charts
+    renderEmployeeGrowthChart(fallbackCharts.employee_growth);
+    renderDepartmentDistributionChart(fallbackCharts.department_distribution);
+    renderPayrollTrendChart(fallbackCharts.payroll_trend);
+    renderHMOEnrollmentChart(fallbackCharts.hmo_enrollment);
+    renderClaimsStatusChart(fallbackCharts.claims_status);
+}
+
+/**
+ * Render Employee Growth Chart (Line Chart)
+ */
+function renderEmployeeGrowthChart(chartData) {
+    const ctx = document.getElementById('employeeGrowthChart');
+    if (!ctx) return;
+    
+    const labels = (chartData.labels || '').toString().split(',').map(s => s.trim());
+    const data = (chartData.data || '').toString().split(',').map(s => parseInt(s) || 0);
+    
+    if (window.employeeGrowthChart instanceof Chart) {
+        window.employeeGrowthChart.destroy();
+    }
+    
+    window.employeeGrowthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Employee Count',
+                data: data,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
+                pointBackgroundColor: '#3b82f6',
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: true, position: 'top' }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+/**
+ * Render Department Distribution Chart (Doughnut Chart)
+ */
+function renderDepartmentDistributionChart(chartData) {
+    const ctx = document.getElementById('departmentDistributionChart');
+    if (!ctx) return;
+    
+    const labels = (chartData.labels || '').toString().split(',').map(s => s.trim());
+    const data = (chartData.data || '').toString().split(',').map(s => parseInt(s) || 0);
+    
+    if (window.departmentDistributionChart instanceof Chart) {
+        window.departmentDistributionChart.destroy();
+    }
+    
+    window.departmentDistributionChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#3b82f6',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6',
+                    '#ec4899'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: true, position: 'right' }
+            }
+        }
+    });
+}
+
+/**
+ * Render Payroll Trend Chart (Bar Chart)
+ */
+function renderPayrollTrendChart(chartData) {
+    const ctx = document.getElementById('payrollTrendChart');
+    if (!ctx) return;
+    
+    const labels = (chartData.labels || '').toString().split(',').map(s => s.trim());
+    const data = (chartData.data || '').toString().split(',').map(s => parseInt(s) || 0);
+    
+    if (window.payrollTrendChart instanceof Chart) {
+        window.payrollTrendChart.destroy();
+    }
+    
+    window.payrollTrendChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Payroll (₱)',
+                data: data,
+                backgroundColor: '#10b981',
+                borderColor: '#059669',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: true, position: 'top' }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+/**
+ * Render HMO Enrollment Chart (Doughnut Chart)
+ */
+function renderHMOEnrollmentChart(chartData) {
+    const ctx = document.getElementById('hmoEnrollmentChart');
+    if (!ctx) return;
+    
+    const labels = (chartData.labels || '').toString().split(',').map(s => s.trim());
+    const data = (chartData.data || '').toString().split(',').map(s => parseInt(s) || 0);
+    const colors = (chartData.colors || '#10b981,#ef4444').toString().split(',').map(s => s.trim());
+    
+    if (window.hmoEnrollmentChart instanceof Chart) {
+        window.hmoEnrollmentChart.destroy();
+    }
+    
+    window.hmoEnrollmentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: true, position: 'bottom' }
+            }
+        }
+    });
+}
+
+/**
+ * Render Claims Status Chart (Bar Chart)
+ */
+function renderClaimsStatusChart(chartData) {
+    const ctx = document.getElementById('claimsStatusChart');
+    if (!ctx) return;
+    
+    const labels = (chartData.labels || '').toString().split(',').map(s => s.trim());
+    const data = (chartData.data || '').toString().split(',').map(s => parseInt(s) || 0);
+    const colors = (chartData.colors || '#f59e0b,#10b981,#ef4444').toString().split(',').map(s => s.trim());
+    
+    if (window.claimsStatusChart instanceof Chart) {
+        window.claimsStatusChart.destroy();
+    }
+    
+    window.claimsStatusChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Claims',
+                data: data,
+                backgroundColor: colors,
+                borderColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: true, position: 'top' }
+            },
+            scales: {
+                x: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+/**
  * Display Analytics Reports Section
  */
 async function displayAnalyticsDashboard() {
@@ -430,7 +791,7 @@ async function displayAnalyticsReports() {
         
         if (!authToken || !userData.id) {
             console.warn('[Analytics] User not authenticated');
-            window.location.href = '/hospital_4/public/login.html';
+            window.location.href = '/hospital_4/index.php';
             return;
         }
         
@@ -518,7 +879,7 @@ async function displayAnalyticsMetrics() {
         
         if (!authToken || !userData.id) {
             console.warn('[Analytics] User not authenticated');
-            window.location.href = '/hospital_4/public/login.html';
+            window.location.href = '/hospital_4/index.php';
             return;
         }
         
@@ -1533,18 +1894,26 @@ function loadFallbackAnalyticsData() {
     if (document.getElementById('active-emp')) {
         document.getElementById('active-emp').textContent = data.overview.active_employees.toLocaleString('en-PH');
     }
-    if (document.getElementById('total-payroll')) {
-        document.getElementById('total-payroll').textContent = '₱' + (data.overview.total_payroll / 1000000).toFixed(1) + 'M';
+    
+    // Populate new KPI cards
+    if (document.getElementById('kpi-avg-salary')) {
+        document.getElementById('kpi-avg-salary').textContent = '₱' + (data.payroll.average_salary || 0).toLocaleString('en-PH');
     }
-    if (document.getElementById('hmo-enroll')) {
-        document.getElementById('hmo-enroll').textContent = data.overview.total_employees.toLocaleString('en-PH');
+    if (document.getElementById('kpi-new-hires')) {
+        document.getElementById('kpi-new-hires').textContent = '2';
     }
-    if (document.getElementById('active-plans')) {
-        document.getElementById('active-plans').textContent = '5';
+    if (document.getElementById('kpi-attrition')) {
+        document.getElementById('kpi-attrition').textContent = '3.20%';
     }
-    if (document.getElementById('pending-claims')) {
-        document.getElementById('pending-claims').textContent = data.overview.pending_claims.toLocaleString('en-PH');
+    if (document.getElementById('kpi-payroll-trend')) {
+        document.getElementById('kpi-payroll-trend').textContent = '+5.50%';
     }
+    if (document.getElementById('kpi-claims-rate')) {
+        document.getElementById('kpi-claims-rate').textContent = '88.70%';
+    }
+    
+    // Load fallback charts
+    loadChartsDataFallback();
 
     // Populate Workforce table (fallback)
     let workforceHtml = '';

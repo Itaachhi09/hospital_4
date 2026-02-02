@@ -52,7 +52,7 @@ class APIClient {
                 // Token expired or invalid
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('userData');
-                window.location.href = 'login.html';
+                window.location.href = '/hospital_4/index.php';
                 return null;
             }
             
