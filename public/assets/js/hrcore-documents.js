@@ -3,8 +3,8 @@
  * Upload, view, download, and manage employee documents
  */
 
-const REST_API_URL = window.REST_API_URL || '/hospital_4/api/';
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const REST_API_URL = '/api/';
+const API_BASE_URL = '/api';
 
 let documentsCache = [];
 let documentCategoriesCache = [];

@@ -6,7 +6,7 @@
 
 import { LEGACY_API_URL, REST_API_URL } from '../utils.js';
 
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const API_BASE_URL = '/api';
 
 // Chart instances for cleanup
 let chartInstances = {};

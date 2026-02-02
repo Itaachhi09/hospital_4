@@ -3,7 +3,7 @@
  * Manages employee salary information, rates, and adjustments
  */
 
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const API_BASE_URL = '/api';
 
 // Fallback helper functions
 function closeModal(modalId) {

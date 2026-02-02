@@ -3,7 +3,7 @@
  * Provides consistent modal patterns, confirmation dialogs, and UX components
  */
 
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const API_BASE_URL = '/api';
 
 // Global state for modals
 let currentModalState = {

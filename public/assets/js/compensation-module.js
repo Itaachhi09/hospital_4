@@ -6,17 +6,7 @@
  * Integrated compensation management for Plans, Adjustments, Incentives, Bonds
  */
 
-const API_BASE = (function() {
-    if (window.getApiUrl) {
-        return window.getApiUrl('/compensation');
-    }
-    // Fallback for local development
-    const path = window.location.pathname;
-    if (path.includes('/hospital_4/')) {
-        return '/hospital_4/api/compensation';
-    }
-    return '/api/compensation';
-})();
+const API_BASE = '/api/compensation';
 let currentModalType = null;
 let editingId = null;
 

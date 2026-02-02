@@ -4,7 +4,7 @@
  * Adapted for Hospital HR Management System
  */
 
-const API_BASE_URL = window.API_BASE_URL || '/hospital_4/api';
+const API_BASE_URL = '/api';
 const PAYROLL_API = `${API_BASE_URL}/payroll/payroll.php`;
 
 let allBonusesData = [];

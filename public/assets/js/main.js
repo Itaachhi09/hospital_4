@@ -4,20 +4,8 @@
  * Global Configuration & Button Initialization
  */
 
-// Set global API base URL for all modules (detect local vs domain deployment)
-function getApiBaseUrl() {
-    const path = window.location.pathname;
-    
-    // If path contains /hospital_4/, we're in local dev
-    if (path.includes('/hospital_4/')) {
-        return '/hospital_4/api';
-    }
-    
-    // Otherwise, assume deployed to domain root
-    return '/api';
-}
-
-const apiBaseUrl = getApiBaseUrl();
+// Set global API base URL - deployed to domain root
+const apiBaseUrl = '/api';
 window.REST_API_URL = apiBaseUrl + '/';
 window.API_BASE_URL = apiBaseUrl;
 
