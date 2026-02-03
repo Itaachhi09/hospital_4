@@ -3,8 +3,9 @@
  * Manages login, logout, and token management
  */
 
-// API base URL - deployed to domain root
-const API_BASE_URL = '/api';
+// Use the API base URL from main.js (which is loaded first)
+// Falls back to /api if main.js hasn't loaded yet
+const API_BASE_URL = window.API_BASE_URL || '/api';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
@@ -42,10 +43,15 @@ async function handleLogin(e) {
         return;
     }
     
-    console.log('[Auth] Submitting login request to ' + API_BASE_URL + '/auth/login.php');
+    // Build login URL
+    const loginUrl = typeof window.getApiUrl === 'function' 
+        ? window.getApiUrl('/auth/login')
+        : API_BASE_URL + '/auth/login.php';
+    
+    console.log('[Auth] Submitting login request to:', loginUrl);
     
     try {
-        const response = await fetch(API_BASE_URL + '/auth/login.php', {
+        const response = await fetch(loginUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -63,25 +69,49 @@ async function handleLogin(e) {
         try {
             data = JSON.parse(text);
         } catch (parseError) {
-            console.error('Response text:', text);
+            console.error('[Auth] Response parse error. Raw response:', text);
             formMessage.classList.add('show', 'error');
             formMessage.textContent = '✗ Server error. Please contact support.';
             return;
         }
         
+        console.log('[Auth] Response status:', response.status);
+        console.log('[Auth] Response ok:', response.ok);
+        console.log('[Auth] Response data:', data);
+        
         if (response.ok && data.success) {
             // Store token and user data
             console.log('%c[Auth] ✓ LOGIN SUCCESSFUL!', 'color: green; font-weight: bold; font-size: 14px;');
-            console.log('[Auth] Response data:', data);
-            console.log('[Auth] Storing token:', data.data.token ? '✓' : '✗');
-            console.log('[Auth] Storing user:', data.data.user ? JSON.stringify(data.data.user) : '✗');
+            console.log('[Auth] Storing token:', data.data?.token ? '✓' : '✗');
+            console.log('[Auth] Storing user:', data.data?.user ? '✓' : '✗');
             
-            localStorage.setItem('authToken', data.data.token);
-            localStorage.setItem('userData', JSON.stringify(data.data.user));
+            if (data.data && data.data.token) {
+                localStorage.setItem('authToken', data.data.token);
+                console.log('[Auth] authToken stored:', localStorage.getItem('authToken') ? '✓' : '✗');
+            } else {
+                console.error('[Auth] ERROR: No token in response!', data);
+                formMessage.classList.add('show', 'error');
+                formMessage.textContent = '✗ Server error: No authentication token received.';
+                return;
+            }
+            
+            if (data.data && data.data.user) {
+                localStorage.setItem('userData', JSON.stringify(data.data.user));
+                console.log('[Auth] userData stored:', localStorage.getItem('userData') ? '✓' : '✗');
+            } else {
+                console.error('[Auth] ERROR: No user data in response!', data);
+                formMessage.classList.add('show', 'error');
+                formMessage.textContent = '✗ Server error: No user data received.';
+                return;
+            }
             
             // Verify storage
-            console.log('[Auth] Token in localStorage after storage:', localStorage.getItem('authToken') ? '✓' : '✗');
-            console.log('[Auth] User in localStorage after storage:', localStorage.getItem('userData') ? '✓' : '✗');
+            const storedToken = localStorage.getItem('authToken');
+            const storedUser = localStorage.getItem('userData');
+            console.log('[Auth] Verification after storage:');
+            console.log('[Auth]   - Token exists:', !!storedToken);
+            console.log('[Auth]   - Token length:', storedToken ? storedToken.length : 0);
+            console.log('[Auth]   - User exists:', !!storedUser);
             
             // Show success message
             formMessage.classList.add('show', 'success');
@@ -96,14 +126,18 @@ async function handleLogin(e) {
             }, 1000);
         } else {
             console.error('%c[Auth] ✗ LOGIN FAILED', 'color: red; font-weight: bold;');
-            console.log('[Auth] Response status:', response.ok);
-            console.log('[Auth] Data success:', data.success);
-            console.log('[Auth] Full response:', data);
+            console.log('[Auth] Response details:', {
+                status: response.status,
+                ok: response.ok,
+                success: data.success,
+                message: data.message
+            });
             formMessage.classList.add('show', 'error');
             formMessage.textContent = '✗ ' + (data.message || 'Login failed. Please check your credentials.');
         }
     } catch (error) {
         console.error('[Auth] Login request error:', error);
+        console.error('[Auth] Error stack:', error.stack);
         formMessage.classList.add('show', 'error');
         formMessage.textContent = '✗ Network error. Please check your connection and try again.';
     }
@@ -112,12 +146,18 @@ async function handleLogin(e) {
 function logout() {
     console.log('[Auth] Logout requested');
     
+    const logoutUrl = typeof window.getApiUrl === 'function' 
+        ? window.getApiUrl('/auth/logout')
+        : API_BASE_URL + '/auth/logout.php';
+    
+    const authToken = localStorage.getItem('authToken');
+    
     // Send logout request to server FIRST (with auth token still in localStorage)
-    fetch(API_BASE_URL + '/auth/logout', {
+    fetch(logoutUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '')
+            'Authorization': 'Bearer ' + (authToken || '')
         },
         credentials: 'include'
     }).then(response => {
