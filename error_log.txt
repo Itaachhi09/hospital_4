@@ -1,0 +1,11 @@
+[03-Feb-2026 04:58:51 Europe/Berlin] PHP Error [2]: Undefined array key "REQUEST_METHOD" in C:\NEWXAMPP\htdocs\hospital_4\api\dashboard.php:82
+[03-Feb-2026 04:58:51 Europe/Berlin] PHP Warning:  Undefined array key "REQUEST_METHOD" in C:\NEWXAMPP\htdocs\hospital_4\api\dashboard.php on line 82
+[03-Feb-2026 04:58:51 Europe/Berlin] Fatal Error [2]: Undefined array key "REQUEST_METHOD" in C:\NEWXAMPP\htdocs\hospital_4\api\dashboard.php:82
+[03-Feb-2026 04:59:02 Europe/Berlin] Dashboard data error: Table 'hr4_hospital.leave_requests' doesn't exist
+[03-Feb-2026 05:33:37 Europe/Berlin] PHP Error [2]: Constant DB_HOST already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:7
+[03-Feb-2026 05:33:37 Europe/Berlin] PHP Error [2]: Constant DB_USER already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:8
+[03-Feb-2026 05:33:37 Europe/Berlin] PHP Error [2]: Constant DB_PASS already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:9
+[03-Feb-2026 05:33:37 Europe/Berlin] PHP Error [2]: Constant DB_NAME already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:10
+[03-Feb-2026 05:33:37 Europe/Berlin] PHP Error [2]: Constant DB_PORT already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:11
+[03-Feb-2026 05:33:37 Europe/Berlin] Dashboard data error: Table 'hr4_hospital.leave_requests' doesn't exist
+[03-Feb-2026 05:33:37 Europe/Berlin] Fatal Error [2]: Constant DB_PORT already defined in C:\NEWXAMPP\htdocs\hospital_4\api\config\database.php:11

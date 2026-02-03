@@ -8,13 +8,76 @@ header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
+// Log all errors to file
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../error_log.txt');
+
+// Set up error handler to catch all errors
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    $errorMsg = "PHP Error [$errno]: $errstr in $errfile:$errline";
+    error_log($errorMsg);
+    // Return false to let PHP handle it normally
+    return false;
+});
+
+// More comprehensive exception handler
+set_exception_handler(function($exception) {
+    $errorMsg = "Exception: " . $exception->getMessage() . " in " . $exception->getFile() . ":" . $exception->getLine() . "\n" . $exception->getTraceAsString();
+    error_log($errorMsg);
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Server error',
+        'message' => $exception->getMessage(),
+        'debug' => APP_ENV === 'development' ? $errorMsg : null
+    ]);
+    exit;
+});
+
+// Register handler for fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null) {
+        $errorMsg = "Fatal Error [" . $error['type'] . "]: " . $error['message'] . " in " . $error['file'] . ":" . $error['line'];
+        error_log($errorMsg);
+        // Only send response if headers haven't been sent yet
+        if (!headers_sent()) {
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => 'Server fatal error',
+                'message' => $error['message']
+            ]);
+        }
+    }
+});
+
 try {
-    require_once __DIR__ . '/config/constants.php';
-    require_once __DIR__ . '/utils/ResponseHandler.php';
-    require_once __DIR__ . '/middlewares/AuthMiddleware.php';
+    $config_file = __DIR__ . '/config/constants.php';
+    if (!file_exists($config_file)) {
+        throw new Exception("Config file not found: " . $config_file);
+    }
+    require_once $config_file;
     
-    // Attempt database connection with error suppression
-    @include __DIR__ . '/config/database.php';
+    $response_handler_file = __DIR__ . '/utils/ResponseHandler.php';
+    if (!file_exists($response_handler_file)) {
+        throw new Exception("ResponseHandler file not found: " . $response_handler_file);
+    }
+    require_once $response_handler_file;
+    
+    $auth_file = __DIR__ . '/middlewares/AuthMiddleware.php';
+    if (!file_exists($auth_file)) {
+        throw new Exception("AuthMiddleware file not found: " . $auth_file);
+    }
+    require_once $auth_file;
+    
+    // Attempt database connection
+    $conn = null;
+    $db_file = __DIR__ . '/config/database.php';
+    if (!file_exists($db_file)) {
+        error_log("Database config file not found: " . $db_file);
+    } else {
+        @include $db_file;
+    }
     
     $method = $_SERVER['REQUEST_METHOD'];
     $role = isset($_GET['role']) ? strtolower($_GET['role']) : 'user';
@@ -25,7 +88,7 @@ try {
     }
     
     // Get dashboard data (even if database is unavailable, return valid JSON)
-    $dashboardData = getDashboardData(isset($conn) ? $conn : null, $role);
+    $dashboardData = getDashboardData($conn, $role);
     
     http_response_code(200);
     echo json_encode([

@@ -22,9 +22,10 @@ try {
     require_once __DIR__ . '/../utils/ResponseHandler.php';
     
     // Get database connection
-    $conn = require __DIR__ . '/../config/database.php';
+    $conn = null;
+    @include __DIR__ . '/../config/database.php';
     
-    if (!$conn || $conn->connect_error) {
+    if (!$conn || ($conn && $conn->connect_error)) {
         // Return fallback data if database unavailable
         echo json_encode(['success' => true, 'data' => $fallbackCategories, 'message' => 'Using fallback data']);
         exit;

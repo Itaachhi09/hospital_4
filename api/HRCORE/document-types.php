@@ -15,9 +15,10 @@ try {
     require_once __DIR__ . '/../utils/ResponseHandler.php';
     
     // Get database connection
-    $conn = require __DIR__ . '/../config/database.php';
+    $conn = null;
+    @include __DIR__ . '/../config/database.php';
     
-    if (!$conn || $conn->connect_error) {
+    if (!$conn || ($conn && $conn->connect_error)) {
         // Return fallback data if database unavailable
         $fallbackTypes = [
             ['id' => 'DOC_TYPE_001', 'category_id' => 'DOC_CAT_001', 'type_name' => 'National ID', 'category_name' => 'Personal Documents', 'description' => 'National Identification Document', 'requires_expiry' => 1, 'status' => 'active'],
