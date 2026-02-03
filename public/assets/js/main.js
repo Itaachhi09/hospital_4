@@ -61,13 +61,27 @@ window.fetch = function(resource, config) {
 // Global error handler
 window.addEventListener('error', function(event) {
     console.error('Global Error:', event.error);
-    ButtonHandler?.showNotification(`Error: ${event.error?.message || 'Unknown error'}`, 'error');
+    // Only show notification if ButtonHandler is available and initialized
+    if (window.ButtonHandler && typeof window.ButtonHandler.showNotification === 'function') {
+        try {
+            window.ButtonHandler.showNotification(`Error: ${event.error?.message || 'Unknown error'}`, 'error');
+        } catch (e) {
+            console.error('Error showing notification:', e);
+        }
+    }
 });
 
 // Global unhandled rejection handler
 window.addEventListener('unhandledrejection', function(event) {
     console.error('Unhandled Rejection:', event.reason);
-    ButtonHandler?.showNotification(`Error: ${event.reason?.message || 'Unknown error'}`, 'error');
+    // Only show notification if ButtonHandler is available and initialized
+    if (window.ButtonHandler && typeof window.ButtonHandler.showNotification === 'function') {
+        try {
+            window.ButtonHandler.showNotification(`Error: ${event.reason?.message || 'Unknown error'}`, 'error');
+        } catch (e) {
+            console.error('Error showing notification:', e);
+        }
+    }
     event.preventDefault();
 });
 
@@ -78,11 +92,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize all global utilities
     initializeGlobalHandlers();
     
-    // Check if user is logged in
+    // Check if user is logged in - but only redirect if NOT already on dashboard or login page
     const token = localStorage.getItem('authToken');
-    if (token && !window.location.href.includes('dashboard.html')) {
-        // Redirect to dashboard if logged in
-        console.log('User is logged in');
+    const currentPath = window.location.pathname;
+    if (token && !currentPath.includes('dashboard') && !currentPath.includes('index.php') && !currentPath.includes('login')) {
+        // Only redirect if we have a token and we're not already on a protected page
+        console.log('User is logged in, but already on appropriate page');
     }
     
     // Set up global button click delegation
@@ -167,12 +182,15 @@ window.showConfirmDialog = function(title, message, onConfirm, onCancel = '') {
 };
 
 /**
- * Navigate to section
+ * Navigate to section - This will be overridden by dashboard.js if it exists
+ * Keep as fallback for non-dashboard pages
  */
-window.navigateToSection = function(section) {
-    const event = new CustomEvent('section-change', { detail: { section } });
-    document.dispatchEvent(event);
-};
+if (!window.navigateToSection) {
+    window.navigateToSection = function(section) {
+        const event = new CustomEvent('section-change', { detail: { section } });
+        document.dispatchEvent(event);
+    };
+}
 
 console.log('[Main.js] Initialization complete');
 

@@ -50,6 +50,7 @@ async function handleLogin(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include', // Important: Include session cookies
             body: JSON.stringify({
                 email: email,
                 password: password

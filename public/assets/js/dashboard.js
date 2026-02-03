@@ -21,7 +21,7 @@ function setupMenuNavigation() {
     });
 }
 
-function navigateToSection(sectionId) {
+async function navigateToSection(sectionId) {
     console.log('[Navigation] Navigating to section:', sectionId);
     
     // Hide all sections
@@ -48,65 +48,69 @@ function navigateToSection(sectionId) {
         }
     });
     
-    // Load section-specific data
-    loadSectionData(sectionId);
+    // Load section-specific data (await to handle async properly)
+    try {
+        await loadSectionData(sectionId);
+    } catch (error) {
+        console.error('[Navigation] Error loading section data:', error);
+    }
 }
 
-function loadSectionData(sectionId) {
+async function loadSectionData(sectionId) {
     switch(sectionId) {
         case 'dashboard':
-            loadDashboardData();
+            await loadDashboardData();
             break;
         case 'notifications':
-            loadNotifications();
+            await loadNotifications();
             break;
         case 'bonuses':
-            loadPayrollBonuses();
+            await loadPayrollBonuses();
             break;
         case 'deductions':
-            loadPayrollDeductions();
+            await loadPayrollDeductions();
             break;
         case 'payroll-runs':
-            loadPayrollRuns();
+            await loadPayrollRuns();
             break;
         case 'payslips':
-            loadPayslips();
+            await loadPayslips();
             break;
         case 'salaries':
-            loadSalaries();
+            await loadSalaries();
             break;
         case 'hmo-providers':
-            loadHMOProviders();
+            await loadHMOProviders();
             break;
         case 'hmo-plans':
-            loadHMOPlans();
+            await loadHMOPlans();
             break;
         case 'hmo-enrollments':
-            loadHMOEnrollments();
+            await loadHMOEnrollments();
             break;
         case 'hmo-claims':
-            loadHMOClaims();
+            await loadHMOClaims();
             break;
         case 'compensation':
             loadCompensation();
             break;
         case 'comp-plans':
-            loadCompensationPlans();
+            await loadCompensationPlans();
             break;
         case 'comp-adjustments':
-            loadCompensationAdjustments();
+            await loadCompensationAdjustments();
             break;
         case 'comp-incentives':
-            loadCompensationIncentives();
+            await loadCompensationIncentives();
             break;
         case 'comp-bonds':
-            loadCompensationBonds();
+            await loadCompensationBonds();
             break;
         case 'hrcore-employees':
-            loadHRCoreEmployees();
+            await loadHRCoreEmployees();
             break;
         case 'hrcore-documents':
-            loadHRCoreDocuments();
+            await loadHRCoreDocuments();
             break;
         case 'hmo':
             loadHMO();
@@ -115,13 +119,13 @@ function loadSectionData(sectionId) {
             loadAnalytics();
             break;
         case 'analytics-dashboard':
-            loadAnalyticsDashboard();
+            await loadAnalyticsDashboard();
             break;
         case 'analytics-reports':
-            loadAnalyticsReports();
+            await loadAnalyticsReports();
             break;
         case 'analytics-metrics':
-            loadAnalyticsMetrics();
+            await loadAnalyticsMetrics();
             break;
     }
 }
@@ -379,6 +383,109 @@ function loadCompensation() {
     });
 }
 
+async function loadCompensationPlans() {
+    console.log('Loading Compensation Plans...');
+    const container = document.getElementById('compPlansContainer');
+    if (!container) {
+        console.error('Compensation Plans container not found');
+        return;
+    }
+    
+    try {
+        // The function is defined in compensation-module.js which is loaded as a script tag
+        // So it should be available globally. Call it directly.
+        if (typeof window.loadCompensationPlans === 'function') {
+            await window.loadCompensationPlans();
+        } else {
+            // If not available, try importing the module
+            const module = await import('./compensation-module.js?v=2.5');
+            if (module && typeof module.loadCompensationPlans === 'function') {
+                await module.loadCompensationPlans();
+            } else {
+                container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Compensation Plans module not available. Please refresh the page.</div>';
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load Compensation Plans:', err);
+        container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Error loading compensation plans: ' + err.message + '</div>';
+    }
+}
+
+async function loadCompensationAdjustments() {
+    console.log('Loading Compensation Adjustments...');
+    const container = document.getElementById('compAdjustmentsContainer');
+    if (!container) {
+        console.error('Compensation Adjustments container not found');
+        return;
+    }
+    
+    try {
+        if (typeof window.loadCompensationAdjustments === 'function') {
+            await window.loadCompensationAdjustments();
+        } else {
+            const module = await import('./compensation-module.js?v=2.5');
+            if (module && typeof module.loadCompensationAdjustments === 'function') {
+                await module.loadCompensationAdjustments();
+            } else {
+                container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Compensation Adjustments module not available. Please refresh the page.</div>';
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load Compensation Adjustments:', err);
+        container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Error loading compensation adjustments: ' + err.message + '</div>';
+    }
+}
+
+async function loadCompensationIncentives() {
+    console.log('Loading Compensation Incentives...');
+    const container = document.getElementById('compIncentivesContainer');
+    if (!container) {
+        console.error('Compensation Incentives container not found');
+        return;
+    }
+    
+    try {
+        if (typeof window.loadCompensationIncentives === 'function') {
+            await window.loadCompensationIncentives();
+        } else {
+            const module = await import('./compensation-module.js?v=2.5');
+            if (module && typeof module.loadCompensationIncentives === 'function') {
+                await module.loadCompensationIncentives();
+            } else {
+                container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Compensation Incentives module not available. Please refresh the page.</div>';
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load Compensation Incentives:', err);
+        container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Error loading compensation incentives: ' + err.message + '</div>';
+    }
+}
+
+async function loadCompensationBonds() {
+    console.log('Loading Compensation Bonds...');
+    const container = document.getElementById('compBondsContainer');
+    if (!container) {
+        console.error('Compensation Bonds container not found');
+        return;
+    }
+    
+    try {
+        if (typeof window.loadCompensationBonds === 'function') {
+            await window.loadCompensationBonds();
+        } else {
+            const module = await import('./compensation-module.js?v=2.5');
+            if (module && typeof module.loadCompensationBonds === 'function') {
+                await module.loadCompensationBonds();
+            } else {
+                container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Compensation Bonds module not available. Please refresh the page.</div>';
+            }
+        }
+    } catch (err) {
+        console.error('Failed to load Compensation Bonds:', err);
+        container.innerHTML = '<div style="color: #ef4444; padding: 20px;">Error loading compensation bonds: ' + err.message + '</div>';
+    }
+}
+
 function loadHMO() {
     const container = document.getElementById('hmoContainer');
     if (container) {
@@ -507,9 +614,48 @@ function toggleMenuSection(element) {
 }
 
 function logout() {
+    console.log('[Dashboard] Logout initiated');
+    
+    // Prevent multiple simultaneous logout calls
+    if (window.loggingOut) {
+        console.log('[Dashboard] Logout already in progress, ignoring duplicate call');
+        return;
+    }
+    window.loggingOut = true;
+    
+    // Get API base URL from window (set by main.js)
+    const apiBase = window.API_BASE_URL || window.REST_API_URL?.replace(/\/$/, '') || '/api';
+    const token = localStorage.getItem('authToken');
+    
+    console.log('[Dashboard] Using API base:', apiBase);
+    console.log('[Dashboard] Token exists:', !!token);
+    
+    // First clear client storage immediately
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
-    window.location.href = '/';
+    localStorage.removeItem('sessionVerified');
+    sessionStorage.clear();
+    
+    console.log('[Dashboard] Local storage cleared');
+    
+    // Send logout request to server in background (don't wait for it)
+    if (token) {
+        fetch(apiBase + '/auth/logout.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            credentials: 'include'
+        }).catch(error => {
+            console.error('[Dashboard] Logout fetch error:', error);
+            // Ignore errors, we're logging out anyway
+        });
+    }
+    
+    // Redirect immediately without waiting for server response
+    console.log('[Dashboard] Redirecting to login page');
+    window.location.replace('/index.php');
 }
 
 /**
@@ -642,7 +788,7 @@ window.goToNotificationsPage = goToNotificationsPage;
 window.loadDropdownNotifications = loadDropdownNotifications;
 
 // Initialize when DOM is ready
-function runDashboardInit() {
+async function runDashboardInit() {
     console.log('%c[Dashboard] INIT START', 'color: blue; font-weight: bold; font-size: 16px;');
     
     // Helper to show debug info
@@ -688,7 +834,8 @@ function runDashboardInit() {
         // VERIFY SESSION: Check if token is still valid on server
         console.log('[Dashboard] Verifying session with server...');
         try {
-            const verifyResponse = await fetch(API_BASE_URL + '/auth/verify', {
+            const apiBase = window.API_BASE_URL || window.REST_API_URL?.replace(/\/$/, '') || '/api';
+            const verifyResponse = await fetch(apiBase + '/auth/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -800,11 +947,13 @@ console.log('[Dashboard] Script loaded, waiting for DOM...');
 
 if (document.readyState === 'loading') {
     console.log('[Dashboard] DOM still loading, adding DOMContentLoaded listener');
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
         console.log('[Dashboard] DOMContentLoaded fired');
-        runDashboardInit();
+        await runDashboardInit();
     });
 } else {
     console.log('[Dashboard] DOM already loaded, running init immediately');
-    runDashboardInit();
+    (async () => {
+        await runDashboardInit();
+    })();
 }

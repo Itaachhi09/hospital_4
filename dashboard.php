@@ -133,7 +133,7 @@ SessionManager::requireLogin();
 
             <!-- Logout -->
             <div class="sidebar-logout">
-                <a href="#" onclick="logout()" class="logout-btn">→ Logout</a>
+                <a href="#" onclick="logout(); return false;" class="logout-btn">→ Logout</a>
             </div>
         </aside>
 
@@ -284,7 +284,7 @@ SessionManager::requireLogin();
                                 <div class="quick-actions">
                                     <h4>Quick Actions</h4>
                                     <a href="#" class="action-link" onclick="navigateToDashboard()">🏠 Dashboard</a>
-                                    <a href="#" class="action-link logout" onclick="logout()">🚪 Sign Out</a>
+                                    <a href="#" class="action-link logout" onclick="logout(); return false;">🚪 Sign Out</a>
                                 </div>
                             </div>
                         </div>
@@ -519,11 +519,11 @@ SessionManager::requireLogin();
     </div>
 
     <!-- Global Button & API Handler Utilities -->
-    <script src="public/assets/js/main.js?v=1.0"></script>
+    <script src="public/assets/js/main.js?v=1.1"></script>
     <script src="public/assets/js/button-handler.js?v=1.0"></script>
     <script src="public/assets/js/button-handlers-map.js?v=1.0"></script>
     <script src="public/assets/js/onclick-handlers.js?v=1.0"></script>
     <script src="public/assets/js/compensation-module.js?v=2.0"></script>
-    <script src="public/assets/js/dashboard.js?v=2.2"></script>
+    <script src="public/assets/js/dashboard.js?v=2.3"></script>
 </body>
 </html>

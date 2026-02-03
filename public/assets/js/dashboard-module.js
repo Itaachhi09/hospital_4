@@ -1,4 +1,4 @@
-/**
+f/**
  * Dashboard Module
  * Handles display of summary information and key metrics on the dashboard.
  * v2.0 - Converted to REST API, modern Tailwind dashboard integration

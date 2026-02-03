@@ -86,12 +86,35 @@ class SessionManager {
     }
     
     /**
-     * Destroy session and clear data
+     * Destroy session and clear data completely
      */
     public static function destroy() {
+        // Clear all session variables
         $_SESSION = [];
+        
+        // Destroy the session
         if (session_status() === PHP_SESSION_ACTIVE) {
+            // Delete session file if it exists
+            $sessionFile = session_save_path() . '/sess_' . session_id();
+            if (file_exists($sessionFile)) {
+                @unlink($sessionFile);
+            }
+            
             session_destroy();
+        }
+        
+        // Clear session cookie
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 3600,
+                $params['path'],
+                $params['domain'],
+                $params['secure'],
+                $params['httponly']
+            );
         }
     }
     

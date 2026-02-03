@@ -10,8 +10,13 @@ require_once 'SessionManager.php';
 // Initialize session with timeout check
 SessionManager::init();
 
-// If already logged in, redirect to dashboard
-SessionManager::redirectIfAuthenticated();
+// If already logged in via PHP session, redirect to dashboard
+// Note: We check PHP session here, but frontend also checks localStorage
+// This prevents redirect loops when session expires but localStorage still has token
+if (SessionManager::isAuthenticated()) {
+    header('Location: ' . DASHBOARD_PAGE);
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

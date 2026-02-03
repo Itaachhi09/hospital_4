@@ -22,22 +22,8 @@ if ($method !== 'POST') {
     die(json_encode(['success' => false, 'message' => 'Method not allowed']));
 }
 
-// Clear session using SessionManager
+// Clear session using SessionManager (includes session file deletion and cookie cleanup)
 SessionManager::destroy();
-
-// Also clear the session cookie
-if (ini_get('session.use_cookies')) {
-    $params = session_get_cookie_params();
-    setcookie(
-        session_name(),
-        '',
-        time() - 42000,
-        $params['path'],
-        $params['domain'],
-        $params['secure'],
-        $params['httponly']
-    );
-}
 
 // Return success response
 http_response_code(200);

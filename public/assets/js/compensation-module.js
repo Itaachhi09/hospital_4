@@ -1053,3 +1053,8 @@ function showNotification(message, type = 'info') {
     setTimeout(() => notification.remove(), 4000);
 }
 
+// Make compensation loading functions globally available
+window.loadCompensationPlans = loadCompensationPlans;
+window.loadCompensationAdjustments = loadCompensationAdjustments;
+window.loadCompensationIncentives = loadCompensationIncentives;
+window.loadCompensationBonds = loadCompensationBonds;

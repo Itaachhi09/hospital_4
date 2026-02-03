@@ -765,10 +765,13 @@ window.loadDashboardData = async function() {
 // NAVIGATION HANDLERS
 // ============================================
 
-window.navigateToSection = function(section) {
-    const event = new CustomEvent('navigate', { detail: { section } });
-    document.dispatchEvent(event);
-};
+// Navigate function - only define if not already defined by dashboard.js
+if (!window.navigateToSection) {
+    window.navigateToSection = function(section) {
+        const event = new CustomEvent('navigate', { detail: { section } });
+        document.dispatchEvent(event);
+    };
+}
 
 window.navigateToDashboard = function() {
     window.navigateToSection('dashboard');
@@ -778,12 +781,25 @@ window.navigateToProfile = function() {
     window.navigateToSection('profile');
 };
 
-window.logout = function() {
-    if (confirm('Are you sure you want to log out?')) {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
-        window.location.href = '/index.php';
-    }
-};
+// Logout function - delegate to dashboard.js if available, otherwise use simple version
+if (!window.logout) {
+    window.logout = function() {
+        if (confirm('Are you sure you want to log out?')) {
+            // Prevent multiple simultaneous logout calls
+            if (window.loggingOut) {
+                return;
+            }
+            window.loggingOut = true;
+            
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            localStorage.removeItem('sessionVerified');
+            sessionStorage.clear();
+            
+            // Use replace instead of href to prevent back button issues
+            window.location.replace('/index.php');
+        }
+    };
+}
 
 console.log('[OnClickHandlers] All global onclick handlers loaded');
