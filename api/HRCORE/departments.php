@@ -44,7 +44,5 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     die(ResponseHandler::error('Server error: ' . $e->getMessage()));
-    http_response_code(405);
-    die(ResponseHandler::error('Method not allowed'));
 }
 ?>

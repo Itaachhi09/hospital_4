@@ -11,10 +11,15 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/constants.php';
-require_once __DIR__ . '/../config/database.php';
+$conn = require __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
+
+if (!$conn) {
+    http_response_code(500);
+    die(ResponseHandler::error('Database connection failed'));
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');

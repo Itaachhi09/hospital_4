@@ -18,17 +18,18 @@ ini_set('display_errors', 0);
 $conn = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 // Check connection
-if ($conn->connect_error) {
-    // Return proper JSON error instead of die
-    header('Content-Type: application/json');
-    http_response_code(503);
-    echo json_encode(['error' => 'Database connection failed', 'message' => 'Database service is unavailable']);
-    exit;
+if (!$conn || $conn->connect_error) {
+    // Set $conn to null so files can check for it
+    $conn = null;
+    // If this is being required (not included), return null
+    // Files should check if $conn is null before using it
+    return null;
 }
 
 // Set charset to utf8
 $conn->set_charset("utf8mb4");
 
-// Return connection
+// Return connection (for files that use $conn = require ...)
+// Also make it available globally for files that use require_once
 return $conn;
 ?>

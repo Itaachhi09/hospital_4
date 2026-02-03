@@ -12,7 +12,12 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/constants.php';
-require_once __DIR__ . '/../config/database.php';
+$conn = require __DIR__ . '/../config/database.php';
+
+if (!$conn) {
+    http_response_code(500);
+    die(json_encode(['error' => 'Database connection failed']));
+}
 require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';

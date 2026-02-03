@@ -7,15 +7,13 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/constants.php';
-require_once __DIR__ . '/../config/database.php';
+$conn = require __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
-
-if (!$conn || $conn->connect_error) {
-    http_response_code(503);
+if (!$conn) {
+    http_response_code(500);
     die(ResponseHandler::error('Database connection failed'));
 }
 
