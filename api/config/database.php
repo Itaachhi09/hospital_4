@@ -5,9 +5,9 @@
  */
 
 define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'hr4_hospital');
+define('DB_USER', 'hr4_admin_4');
+define('DB_PASS', 'admin123');
+define('DB_NAME', 'hr4_hospital_4');
 define('DB_PORT', 3306);
 
 // Suppress error display

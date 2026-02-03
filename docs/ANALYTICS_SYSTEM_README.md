@@ -23,7 +23,7 @@ The HR4 Analytics Dashboard is a comprehensive, real-time data analytics platfor
 ## 📁 FILE STRUCTURE
 
 ```
-hospital_4/
+/
 ├── database/
 │   ├── analytics_extension.sql          # NEW: Database schema extension
 │   ├── schema.sql                       # Existing: Core HR schema
@@ -122,7 +122,7 @@ hospital_4/
 
 ### Base URL
 ```
-http://localhost/hospital_4/api/v1/analytics
+http://localhost//api/v1/analytics
 ```
 
 ### Authentication
@@ -187,7 +187,7 @@ GET /departments/{id}/attendance - Department attendance
 
 ### Location
 ```
-http://localhost/hospital_4/public/analytics-dashboard.html
+http://localhost//public/analytics-dashboard.html
 ```
 
 ### Features
@@ -428,7 +428,7 @@ File: `api/config/database.php`
 define('DB_HOST', 'localhost');
 define('DB_USER', 'hospital_user');
 define('DB_PASSWORD', 'secure_password');
-define('DB_NAME', 'hospital_4');
+define('DB_NAME', '[your_database_name]');
 ```
 
 ### JWT Configuration
@@ -444,7 +444,7 @@ define('JWT_EXPIRATION', 86400);  // 24 hours
 File: `public/analytics-dashboard.html`
 
 ```javascript
-const API_BASE = '/hospital_4/api/v1/analytics';
+const API_BASE = '//api/v1/analytics';
 const AUTH_TOKEN = localStorage.getItem('authToken');
 ```
 
@@ -458,10 +458,10 @@ const AUTH_TOKEN = localStorage.getItem('authToken');
 mysqldump -u user -p hospital_4 > backup.sql
 
 # Execute analytics extension
-mysql -u user -p hospital_4 < database/analytics_extension.sql
+mysql -u user -p [database_name] < database/analytics_extension.sql
 
 # Verify tables and views
-mysql -u user -p hospital_4 -e "SHOW TABLES LIKE '%metrics%'; SHOW VIEWS;"
+mysql -u user -p [database_name] -e "SHOW TABLES LIKE '%metrics%'; SHOW VIEWS;"
 ```
 
 ### 2. Initialize Data
@@ -476,12 +476,12 @@ CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()));
 ```bash
 # Test dashboard endpoint
 curl -H "Authorization: Bearer {token}" \
-     http://localhost/hospital_4/api/v1/analytics/dashboard
+     http://localhost//api/v1/analytics/dashboard
 ```
 
 ### 4. Access Dashboard
 ```
-http://localhost/hospital_4/public/analytics-dashboard.html
+http://localhost//public/analytics-dashboard.html
 ```
 
 ### 5. Setup Cron Jobs (Optional)
@@ -540,33 +540,33 @@ http://localhost/hospital_4/public/analytics-dashboard.html
 
 ### Example 1: Get Dashboard
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/dashboard" \
+curl -X GET "http://localhost//api/v1/analytics/dashboard" \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json"
 ```
 
 ### Example 2: Get KPIs
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/metrics/kpis" \
+curl -X GET "http://localhost//api/v1/analytics/metrics/kpis" \
   -H "Authorization: Bearer eyJhbGc..."
 ```
 
 ### Example 3: Generate Report
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/reports/monthly-hr-summary?month=2026-02" \
+curl -X GET "http://localhost//api/v1/analytics/reports/monthly-hr-summary?month=2026-02" \
   -H "Authorization: Bearer eyJhbGc..."
 ```
 
 ### Example 4: Export Report
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/reports/monthly-hr-summary/export?format=csv&month=2026-02" \
+curl -X GET "http://localhost//api/v1/analytics/reports/monthly-hr-summary/export?format=csv&month=2026-02" \
   -H "Authorization: Bearer eyJhbGc..." \
   -o report.csv
 ```
 
 ### Example 5: Department Metrics
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/departments/1/payroll?month=2026-02" \
+curl -X GET "http://localhost//api/v1/analytics/departments/1/payroll?month=2026-02" \
   -H "Authorization: Bearer eyJhbGc..."
 ```
 

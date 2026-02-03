@@ -5,7 +5,7 @@
  * Asserts API is reachable and returns 200.
  */
 
-$baseUrl = getenv('API_BASE_URL') ?: 'http://localhost/hospital_4/api';
+$baseUrl = getenv('API_BASE_URL') ?: 'http://localhost/api';
 $url = rtrim($baseUrl, '/') . '/health';
 
 $ch = curl_init($url);

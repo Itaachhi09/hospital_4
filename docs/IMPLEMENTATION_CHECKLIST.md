@@ -327,7 +327,7 @@ To deploy this compensation module:
 
 3. **Test Endpoints**
    ```bash
-   curl http://localhost/hospital_4/api/compensation/plans \
+   curl http://localhost/api/compensation/plans \
      -H "Authorization: Bearer $JWT_TOKEN"
    ```
 

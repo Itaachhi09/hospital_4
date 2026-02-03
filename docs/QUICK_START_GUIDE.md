@@ -27,7 +27,7 @@ Before you start, verify:
 - [ ] SSH/terminal access available
 - [ ] PHP 7.4+ installed
 - [ ] DBA access available
-- [ ] Project files present at `/hospital_4/`
+- [ ] Project files present at root directory
 
 ---
 
@@ -38,10 +38,10 @@ Before you start, verify:
 **Command:**
 ```bash
 # Connect to MySQL and run the analytics extension
-mysql -u [username] -p[password] hospital_4 < database/analytics_extension.sql
+mysql -u [username] -p[password] [database_name] < database/analytics_extension.sql
 
 # Verify it worked
-mysql -u [username] -p[password] hospital_4 -e "SHOW TABLES LIKE '%metrics%';"
+mysql -u [username] -p[password] [database_name] -e "SHOW TABLES LIKE '%metrics%';"
 ```
 
 **Expected Output:**
@@ -68,15 +68,15 @@ Tables showing:
 **Command:**
 ```bash
 # Refresh payroll data for current month
-mysql -u [username] -p[password] hospital_4 -e \
+mysql -u [username] -p[password] [database_name] -e \
 "CALL sp_refresh_payroll_metrics(DATE_FORMAT(CURDATE(), '%Y-%m'));"
 
 # Refresh attendance data for current month
-mysql -u [username] -p[password] hospital_4 -e \
+mysql -u [username] -p[password] [database_name] -e \
 "CALL sp_refresh_attendance_metrics(YEAR(CURDATE()), MONTH(CURDATE()));"
 
 # Refresh department metrics
-mysql -u [username] -p[password] hospital_4 -e \
+mysql -u [username] -p[password] [database_name] -e \
 "CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()));"
 ```
 
@@ -89,7 +89,7 @@ mysql -u [username] -p[password] hospital_4 -e \
 **Test 1: Get JWT Token**
 ```bash
 # Login to get authentication token
-curl -X POST "http://localhost/hospital_4/api/v1/auth/login" \
+curl -X POST "http://localhost/api/v1/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@hospital.com","password":"password"}'
 ```
@@ -98,7 +98,7 @@ curl -X POST "http://localhost/hospital_4/api/v1/auth/login" \
 
 **Test 2: Dashboard Endpoint**
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/dashboard" \
+curl -X GET "http://localhost/api/v1/analytics/dashboard" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json"
 ```
@@ -125,7 +125,7 @@ curl -X GET "http://localhost/hospital_4/api/v1/analytics/dashboard" \
 
 **Test 3: KPI Metrics**
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/metrics/kpis" \
+curl -X GET "http://localhost/api/v1/analytics/metrics/kpis" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
@@ -135,7 +135,7 @@ curl -X GET "http://localhost/hospital_4/api/v1/analytics/metrics/kpis" \
 
 **URL:**
 ```
-http://localhost/hospital_4/public/analytics-dashboard.html
+http://localhost/public/analytics-dashboard.html
 ```
 
 **What to see:**
@@ -212,7 +212,7 @@ All checked? ✅ **System is ready to use!**
 4. Setup monitoring and alerts
 
 ### For Managers
-1. Access the dashboard at `/hospital_4/public/analytics-dashboard.html`
+1. Access the dashboard at `/public/analytics-dashboard.html`
 2. Filter by department to see department-specific metrics
 3. Export reports as needed
 4. Review compliance metrics regularly
@@ -337,7 +337,7 @@ mysql -u [user] -p[pass] hospital_4 -e \
 ## 🎓 QUICK USER GUIDE
 
 ### Accessing the Dashboard
-1. Go to: `http://localhost/hospital_4/public/analytics-dashboard.html`
+1. Go to: `http://localhost/public/analytics-dashboard.html`
 2. Login with your credentials
 3. Dashboard appears with current month data
 

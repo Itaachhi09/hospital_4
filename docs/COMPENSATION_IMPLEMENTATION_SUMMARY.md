@@ -146,7 +146,7 @@ A complete, enterprise-grade Compensation Management Module for HR4 Hospital wit
 ### 5. File Structure
 
 ```
-hospital_4/
+/
 ├── api/compensation/
 │   ├── index.php              ✅ Module router
 │   ├── plans.php              ✅ Plans API (~280 lines)
@@ -343,7 +343,7 @@ All endpoints can be tested immediately:
 **Using cURL:**
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  http://localhost/hospital_4/api/compensation/plans
+  http://localhost//api/compensation/plans
 ```
 
 **Using Postman:**
@@ -390,7 +390,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 3. **Test endpoints:**
    ```bash
-   curl http://localhost/hospital_4/api/compensation/plans \
+   curl http://localhost//api/compensation/plans \
      -H "Authorization: Bearer $JWT_TOKEN"
    ```
 

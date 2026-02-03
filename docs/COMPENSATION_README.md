@@ -46,7 +46,7 @@ The Compensation Module is a complete, production-ready compensation management 
 ## Project Structure
 
 ```
-hospital_4/
+/
 ├── api/
 │   └── compensation/
 │       ├── index.php          # Module router
@@ -97,7 +97,7 @@ Test with cURL:
 ```bash
 # List compensation plans
 curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  http://localhost/hospital_4/api/compensation/plans
+  http://localhost//api/compensation/plans
 ```
 
 Or use Postman with the provided collection.
@@ -371,7 +371,7 @@ Complete Postman collection included: `postman/HR4_Compensation_Collection.postm
 
 **Setup:**
 1. Import collection into Postman
-2. Set `base_url` variable: `http://localhost/hospital_4`
+2. Set `base_url` variable: `http://localhost`
 3. Set `token` variable with your JWT token
 4. Run pre-built requests
 
@@ -388,7 +388,7 @@ Complete Postman collection included: `postman/HR4_Compensation_Collection.postm
 
 ```bash
 # Create salary adjustment
-curl -X POST http://localhost/hospital_4/api/compensation/adjustments \
+curl -X POST http://localhost//api/compensation/adjustments \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -401,15 +401,15 @@ curl -X POST http://localhost/hospital_4/api/compensation/adjustments \
   }'
 
 # List pending adjustments
-curl http://localhost/hospital_4/api/compensation/adjustments?status=pending \
+curl http://localhost//api/compensation/adjustments?status=pending \
   -H "Authorization: Bearer $TOKEN"
 
 # HR approval
-curl -X POST http://localhost/hospital_4/api/compensation/adjustments/{ID}/approve-hr \
+curl -X POST http://localhost//api/compensation/adjustments/{ID}/approve-hr \
   -H "Authorization: Bearer $TOKEN"
 
 # Finance approval (triggers payroll update)
-curl -X POST http://localhost/hospital_4/api/compensation/adjustments/{ID}/approve-finance \
+curl -X POST http://localhost//api/compensation/adjustments/{ID}/approve-finance \
   -H "Authorization: Bearer $TOKEN"
 ```
 

@@ -5,7 +5,7 @@
  * Asserts HTTP 200 and JSON shape; auth may be required.
  */
 
-$baseUrl = getenv('API_BASE_URL') ?: 'http://localhost/hospital_4/api';
+$baseUrl = getenv('API_BASE_URL') ?: 'http://localhost/api';
 $url = rtrim($baseUrl, '/') . '/v1/hrcore/employees?page=1&pageSize=5';
 
 $ch = curl_init($url);

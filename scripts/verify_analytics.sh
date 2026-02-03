@@ -141,7 +141,7 @@ echo ""
 echo -e "${YELLOW}BEFORE GOING LIVE:${NC}"
 echo ""
 echo "1. Database Setup"
-echo "   [ ] Backup existing hospital_4 database"
+echo "   [ ] Backup existing database"
 echo "   [ ] Execute database/analytics_extension.sql"
 echo "   [ ] Verify all 8 tables created: mysql -e 'SHOW TABLES LIKE \"%metrics%\"'"
 echo "   [ ] Verify all 6 views created: mysql -e 'SHOW VIEWS'"
@@ -194,7 +194,7 @@ if [ $FAILED -eq 0 ]; then
     echo "1. Execute database/analytics_extension.sql"
     echo "2. Run initial data refresh procedures"
     echo "3. Test API endpoints with valid token"
-    echo "4. Access http://localhost/hospital_4/public/analytics-dashboard.html"
+    echo "4. Access http://localhost/public/analytics-dashboard.html"
 else
     echo -e "${RED}Some checks failed. Please review the items marked with ✗ above.${NC}"
 fi

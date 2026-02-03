@@ -27,7 +27,7 @@ info:
   x-deprecation-policy: "Deprecated endpoints return X-API-Deprecated: true and X-API-Sunset: YYYY-MM-DD"
 
 servers:
-  - url: http://localhost/hospital_4/api
+  - url: http://localhost/api
     description: Development Server
   - url: https://api.hospital.com
     description: Production Server

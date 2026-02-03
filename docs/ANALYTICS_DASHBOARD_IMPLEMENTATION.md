@@ -69,7 +69,7 @@ Create cron jobs to regularly refresh analytics data:
 
 ### Base URL
 ```
-/hospital_4/api/v1/analytics/
+/api/v1/analytics/
 ```
 
 ### Dashboard Endpoint
@@ -198,7 +198,7 @@ GET /departments/{departmentId}/attendance
 
 ### Access URL
 ```
-/hospital_4/public/analytics-dashboard.html
+/public/analytics-dashboard.html
 ```
 
 ### Features
@@ -521,10 +521,10 @@ chmod 755 /path/to/database/
 ```bash
 # Test API endpoint
 curl -H "Authorization: Bearer [token]" \
-     http://localhost/hospital_4/api/v1/analytics/dashboard
+     http://localhost/api/v1/analytics/dashboard
 
 # Test dashboard access
-curl http://localhost/hospital_4/public/analytics-dashboard.html
+curl http://localhost/public/analytics-dashboard.html
 ```
 
 ### Performance Optimization

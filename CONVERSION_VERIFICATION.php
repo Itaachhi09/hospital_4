@@ -162,9 +162,9 @@ echo "✓ Redundant entry pages have been removed\n";
 echo "✓ API routing remains intact in api/ directory\n\n";
 
 echo "ENTRY POINTS:\n";
-echo "  - http://localhost/hospital_4/ → index.php (Login)\n";
-echo "  - http://localhost/hospital_4/home.php → Home/Welcome page\n";
-echo "  - http://localhost/hospital_4/dashboard.php → Dashboard (requires authentication)\n";
-echo "  - http://localhost/hospital_4/analytics-dashboard.php → Analytics (requires authentication)\n";
-echo "  - http://localhost/hospital_4/api/ → REST API endpoints\n";
+echo "  - http://localhost/ → index.php (Login)\n";
+echo "  - http://localhost/home.php → Home/Welcome page\n";
+echo "  - http://localhost/dashboard.php → Dashboard (requires authentication)\n";
+echo "  - http://localhost/analytics-dashboard.php → Analytics (requires authentication)\n";
+echo "  - http://localhost/api/ → REST API endpoints\n";
 ?>

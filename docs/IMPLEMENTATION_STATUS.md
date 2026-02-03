@@ -24,7 +24,7 @@
   - ✅ Performance Indexes (optimized for common queries)
   - ✅ Foreign Key Relationships (data integrity)
   - ✅ Constraints & Validation (data quality)
-- **Next Step:** Execute SQL file against hospital_4 database
+- **Next Step:** Execute SQL file against database
 
 ### 2. API Implementation ✅
 - **Status:** COMPLETE & TESTED
@@ -126,7 +126,7 @@
 ### 4. Frontend Dashboard Testing (DEPENDS ON STEPS 1-3)
 - **Status:** MANUAL TESTING NEEDED
 - **Tests Required:**
-  - [ ] Access `http://localhost/hospital_4/public/analytics-dashboard.html`
+  - [ ] Access `http://localhost/public/analytics-dashboard.html`
   - [ ] Dashboard loads without console errors
   - [ ] All widgets populate with data
   - [ ] Department filter works

@@ -7,7 +7,7 @@
 // Define base configuration
 define('APP_NAME', 'HR4 Hospital HR Management System');
 define('APP_ROOT', dirname(__DIR__));
-define('APP_URL', 'http://localhost/hospital_4');
+define('APP_URL', 'http://localhost');
 
 // Session configuration
 define('SESSION_TIMEOUT', 3600); // 1 hour

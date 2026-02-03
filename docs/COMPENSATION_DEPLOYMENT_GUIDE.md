@@ -80,7 +80,7 @@ Sample data is included in `compensation_schema.sql`:
 ```bash
 # List compensation plans
 curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  http://localhost/hospital_4/api/compensation/plans
+  http://localhost/api/compensation/plans
 
 # Create salary adjustment
 curl -X POST \
@@ -94,7 +94,7 @@ curl -X POST \
     "effective_date": "2024-03-01",
     "reason": "Promotion to Senior Manager"
   }' \
-  http://localhost/hospital_4/api/compensation/adjustments
+  http://localhost/api/compensation/adjustments
 
 # Issue incentive
 curl -X POST \
@@ -106,12 +106,12 @@ curl -X POST \
     "amount": 5000,
     "incentive_month": "2024-02-01"
   }' \
-  http://localhost/hospital_4/api/compensation/incentives
+  http://localhost/api/compensation/incentives
 ```
 
 #### Or use Postman:
 1. Import `postman/HR4_API_Collection.postman_collection.json`
-2. Set `base_url` variable to `http://localhost/hospital_4`
+2. Set `base_url` variable to `http://localhost`
 3. Set `token` variable with your JWT token
 4. Run pre-built requests
 

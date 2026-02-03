@@ -19,16 +19,16 @@ This folder contains automated tests for the modular API: contract tests between
 ### Contract tests (no server required)
 
 ```bash
-cd c:\xampp\htdocs\hospital_4
+cd c:\xampp\htdocs
 php tests/contract/test_hrcore_interface.php
 ```
 
 ### Integration tests (API must be reachable)
 
-Set base URL if needed (default: `http://localhost/hospital_4/api`):
+Set base URL if needed (default: `http://localhost/api`):
 
 ```bash
-set API_BASE_URL=http://localhost/hospital_4/api
+set API_BASE_URL=http://localhost/api
 php tests/integration/test_hrcore_employees.php
 php tests/integration/test_payroll_health.php
 ```

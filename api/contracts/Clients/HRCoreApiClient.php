@@ -16,7 +16,7 @@ class HRCoreApiClient implements HRCoreClientInterface
     private $retryHelper;
 
     /**
-     * @param string   $baseUrl           e.g. http://localhost/hospital_4/api
+     * @param string   $baseUrl           e.g. http://localhost/api
      * @param callable $getTokenCallback   function(): string  (JWT for internal calls)
      * @param object   $circuitBreaker    optional CircuitBreaker instance
      * @param object   $retryHelper        optional RetryHelper instance

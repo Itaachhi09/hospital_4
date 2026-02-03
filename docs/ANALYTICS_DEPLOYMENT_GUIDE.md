@@ -9,7 +9,7 @@
 1. **Database Extension** (`database/analytics_extension.sql`)
    - Status: READY TO DEPLOY
    - Contains: 8 tables, 6 views, 3 stored procedures
-   - Action: Execute against hospital_4 database
+   - Action: Execute against database
 
 2. **API Implementation** (`api/analytics/analytics-enhanced.php`)
    - Status: READY TO USE
@@ -35,16 +35,16 @@
 #### Step 1.1: Backup Existing Database
 ```bash
 # Create backup before running analytics extension
-mysqldump -u [username] -p [hospital_4_database] > backup_hospital_4_$(date +%Y%m%d).sql
+mysqldump -u [username] -p [database_name] > backup_hospital_4_$(date +%Y%m%d).sql
 ```
 
 #### Step 1.2: Execute Analytics Extension SQL
 ```bash
 # Connect to database and run extension
-mysql -u [username] -p [hospital_4_database] < database/analytics_extension.sql
+mysql -u [username] -p [database_name] < database/analytics_extension.sql
 
 # Verify tables were created
-mysql -u [username] -p [hospital_4_database] -e "
+mysql -u [username] -p [database_name] -e "
     SHOW TABLES LIKE '%metrics%';
     SHOW TABLES LIKE '%tracking%';
     SHOW VIEWS;
@@ -108,13 +108,13 @@ $this->routes['v1/analytics/departments'] = 'analytics/analytics-enhanced.php';
 #### Step 3.1: Verify Dashboard File
 - Location: `public/analytics-dashboard.html`
 - Status: ✅ Already deployed
-- Access URL: `/hospital_4/public/analytics-dashboard.html`
+- Access URL: `/public/analytics-dashboard.html`
 
 #### Step 3.2: Test Dashboard Access
 ```bash
 # Test with authentication token
 curl -H "Authorization: Bearer {your_jwt_token}" \
-     http://localhost/hospital_4/api/v1/analytics/dashboard
+     http://localhost/api/v1/analytics/dashboard
 ```
 
 Expected Response:
@@ -137,7 +137,7 @@ Expected Response:
 
 ### Base URL
 ```
-http://localhost/hospital_4/api/v1/analytics
+http://localhost/api/v1/analytics
 ```
 
 ### Authentication
@@ -222,7 +222,7 @@ $conn = new mysqli(
     DB_HOST,      // localhost
     DB_USER,      // your_db_user
     DB_PASSWORD,  // your_db_password
-    DB_NAME       // hospital_4
+    DB_NAME       // [your_database_name]
 );
 ```
 
@@ -249,22 +249,22 @@ define('JWT_EXPIRATION', 86400);  // 24 hours
 # Add to crontab (crontab -e)
 
 # Refresh payroll metrics daily at 2 AM
-0 2 * * * mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_payroll_metrics(DATE_FORMAT(CURDATE(), '%Y-%m'))"
+0 2 * * * mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_payroll_metrics(DATE_FORMAT(CURDATE(), '%Y-%m'))"
 
 # Refresh attendance metrics daily at 3 AM
-0 3 * * * mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_attendance_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
+0 3 * * * mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_attendance_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
 
 # Refresh department metrics daily at 4 AM
-0 4 * * * mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
+0 4 * * * mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
 ```
 
 **Windows (Task Scheduler):**
 1. Create batch file: `refresh_analytics.bat`
 ```batch
 @echo off
-mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_payroll_metrics(DATE_FORMAT(CURDATE(), '%%Y-%%m'))"
-mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_attendance_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
-mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
+mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_payroll_metrics(DATE_FORMAT(CURDATE(), '%%Y-%%m'))"
+mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_attendance_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
+mysql -u [user] -p[pass] [database_name] -e "CALL sp_refresh_department_metrics(YEAR(CURDATE()), MONTH(CURDATE()))"
 ```
 
 2. Schedule in Task Scheduler to run daily
@@ -277,7 +277,7 @@ mysql -u [user] -p[pass] hospital_4 -e "CALL sp_refresh_department_metrics(YEAR(
 
 #### Test 1: Dashboard Endpoint
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/dashboard" \
+curl -X GET "http://localhost/api/v1/analytics/dashboard" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json"
 ```
@@ -286,37 +286,37 @@ Expected Status: 200 OK
 
 #### Test 2: KPI Metrics
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/metrics/kpis" \
+curl -X GET "http://localhost/api/v1/analytics/metrics/kpis" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 #### Test 3: Employee Summary
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/metrics/employees" \
+curl -X GET "http://localhost/api/v1/analytics/metrics/employees" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 #### Test 4: Report Generation
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/reports/monthly-hr-summary" \
+curl -X GET "http://localhost/api/v1/analytics/reports/monthly-hr-summary" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 #### Test 5: Department Metrics
 ```bash
-curl -X GET "http://localhost/hospital_4/api/v1/analytics/departments/1" \
+curl -X GET "http://localhost/api/v1/analytics/departments/1" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
 ### Integration Tests: Frontend
 
 1. **Login Test**
-   - Navigate to: `/hospital_4/public/login.html`
+   - Navigate to: `/public/login.html`
    - Login with valid credentials
    - System should store JWT token in localStorage
 
 2. **Dashboard Load Test**
-   - Navigate to: `/hospital_4/public/analytics-dashboard.html`
+   - Navigate to: `/public/analytics-dashboard.html`
    - Dashboard should load without errors
    - All widgets should populate with data
 
@@ -596,7 +596,7 @@ tail -f /var/log/apache2/error.log
 tail -f /var/log/php_errors.log
 
 # Application logs
-tail -f /path/to/hospital_4/logs/error.log
+tail -f /path/to/logs/error.log
 ```
 
 ---

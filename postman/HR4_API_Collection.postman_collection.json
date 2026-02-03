@@ -19,7 +19,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost/hospital_4/api",
+			"value": "http://localhost/api",
 			"type": "string"
 		},
 		{
