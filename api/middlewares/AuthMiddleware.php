@@ -10,8 +10,24 @@ require_once __DIR__ . '/../config/constants.php';
 class AuthMiddleware {
     
     public static function verifyToken() {
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? null;
+        // Try to get Authorization header from multiple sources
+        // First try getallheaders() (Apache)
+        $authHeader = null;
+        
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            $authHeader = $headers['Authorization'] ?? null;
+        }
+        
+        // Fallback to $_SERVER for LiteSpeed and other servers
+        if (!$authHeader && !empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        
+        // Also try the lowercase version
+        if (!$authHeader && !empty($_SERVER['http_authorization'])) {
+            $authHeader = $_SERVER['http_authorization'];
+        }
         
         if (!$authHeader) {
             http_response_code(401);
@@ -41,8 +57,23 @@ class AuthMiddleware {
      * Returns user data on success, null on failure
      */
     public static function tryVerifyToken() {
-        $headers = getallheaders();
-        $authHeader = $headers['Authorization'] ?? null;
+        // Try to get Authorization header from multiple sources
+        $authHeader = null;
+        
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            $authHeader = $headers['Authorization'] ?? null;
+        }
+        
+        // Fallback to $_SERVER for LiteSpeed and other servers
+        if (!$authHeader && !empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+        
+        // Also try the lowercase version
+        if (!$authHeader && !empty($_SERVER['http_authorization'])) {
+            $authHeader = $_SERVER['http_authorization'];
+        }
         
         if (!$authHeader) {
             return null;
