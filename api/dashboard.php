@@ -79,7 +79,7 @@ try {
         @include $db_file;
     }
     
-    $method = $_SERVER['REQUEST_METHOD'];
+    $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
     $role = isset($_GET['role']) ? strtolower($_GET['role']) : 'user';
     
     if ($method !== 'GET') {

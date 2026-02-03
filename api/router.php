@@ -16,7 +16,8 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization, X-API-Key, X-
 header('Content-Type: application/json');
 
 // Handle preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($requestMethod === 'OPTIONS') {
     http_response_code(200);
     die();
 }

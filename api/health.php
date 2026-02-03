@@ -6,7 +6,7 @@
 
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/config/database.php';
+@require_once __DIR__ . '/config/database.php';
 
 $health = [
     'status' => 'healthy',
@@ -17,7 +17,7 @@ $health = [
 
 // Check database connection
 try {
-    $conn = require __DIR__ . '/config/database.php';
+    @$conn = require __DIR__ . '/config/database.php';
     if ($conn && !$conn->connect_error) {
         $health['database'] = 'connected';
         $conn->close();

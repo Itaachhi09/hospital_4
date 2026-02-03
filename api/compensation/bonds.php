@@ -17,7 +17,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/constants.php';
-$conn = require __DIR__ . '/../config/database.php';
+@$conn = require __DIR__ . '/../config/database.php';
 
 if (!$conn) {
     http_response_code(500);
@@ -27,7 +27,7 @@ require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $parts = array_filter(explode('/', $path));
 

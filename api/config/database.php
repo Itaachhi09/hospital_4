@@ -4,11 +4,11 @@
  * HR4 Hospital HR Management System
  */
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'hr4_admin_4');
-define('DB_PASS', 'admin123');
-define('DB_NAME', 'hr4_hospital_4');
-define('DB_PORT', 3306);
+if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
+if (!defined('DB_USER')) define('DB_USER', 'hr4_admin_4');
+if (!defined('DB_PASS')) define('DB_PASS', 'admin123');
+if (!defined('DB_NAME')) define('DB_NAME', 'hr4_hospital_4');
+if (!defined('DB_PORT')) define('DB_PORT', 3306);
 
 // Suppress error display
 error_reporting(E_ALL);

@@ -9,7 +9,8 @@ require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
 // Only accept POST requests
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($method !== 'POST') {
     http_response_code(405);
     die(json_encode(['success' => false, 'message' => 'Method not allowed']));
 }

@@ -18,8 +18,8 @@ require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../utils/ValidationHelper.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
-$path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
 $parts = explode('/', $path);
 
 // Get resource from URL path or query parameter

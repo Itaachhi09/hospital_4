@@ -685,6 +685,46 @@ function runDashboardInit() {
         
         debug('✓ User data found');
         
+        // VERIFY SESSION: Check if token is still valid on server
+        console.log('[Dashboard] Verifying session with server...');
+        try {
+            const verifyResponse = await fetch(API_BASE_URL + '/auth/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                credentials: 'include'
+            });
+            
+            if (!verifyResponse.ok) {
+                console.warn('[Dashboard] Session verification failed:', verifyResponse.status);
+                debug('❌ SESSION EXPIRED OR INVALID');
+                localStorage.clear();
+                setTimeout(() => { window.location.href = '/index.php'; }, 100);
+                return false;
+            }
+            
+            const verifyData = await verifyResponse.json();
+            if (!verifyData.success) {
+                console.warn('[Dashboard] Token invalid on server:', verifyData.message);
+                debug('❌ TOKEN INVALID: ' + verifyData.message);
+                localStorage.clear();
+                setTimeout(() => { window.location.href = '/index.php'; }, 100);
+                return false;
+            }
+            
+            console.log('[Dashboard] ✓ Session verified with server');
+            debug('✓ Session verified');
+            localStorage.setItem('sessionVerified', 'true');
+        } catch (verifyError) {
+            console.error('[Dashboard] Session verification error:', verifyError);
+            debug('❌ VERIFICATION ERROR: ' + verifyError.message);
+            localStorage.clear();
+            setTimeout(() => { window.location.href = '/index.php'; }, 100);
+            return false;
+        }
+        
         // Parse user data
         let user;
         try {

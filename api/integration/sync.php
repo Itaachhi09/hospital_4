@@ -7,7 +7,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/constants.php';
-$conn = require __DIR__ . '/../config/database.php';
+@$conn = require __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/ResponseHandler.php';
 require_once __DIR__ . '/../middlewares/AuthMiddleware.php';
 
@@ -16,7 +16,7 @@ if (!$conn) {
     die(ResponseHandler::error('Database connection failed'));
 }
 
-$method = $_SERVER['REQUEST_METHOD'];
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = $_SERVER['PARSED_PATH'] ?? '';
 $systemId = $_SERVER['SYSTEM_ID'] ?? 'HR1';
 

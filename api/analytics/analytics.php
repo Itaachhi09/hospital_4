@@ -17,7 +17,7 @@ if (!$conn) {
     die(ResponseHandler::error('Database connection failed'));
 }
 
-$method = $_SERVER['REQUEST_METHOD'];
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $resource = isset($_GET['resource']) ? $_GET['resource'] : 'dashboard';
 
 // Verify authentication (optional for analytics)

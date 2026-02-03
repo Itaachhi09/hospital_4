@@ -5,7 +5,7 @@
  */
 
 class APIClient {
-    constructor(baseURL = 'http://localhost/api') {
+    constructor(baseURL = '/api') {
         this.baseURL = baseURL;
         this.csrfToken = null;
         this.loadCSRFToken();

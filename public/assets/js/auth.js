@@ -112,7 +112,7 @@ function logout() {
     console.log('[Auth] Logout requested');
     
     // Send logout request to server FIRST (with auth token still in localStorage)
-    fetch(API_BASE_URL + '/auth/logout.php', {
+    fetch(API_BASE_URL + '/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -121,9 +121,14 @@ function logout() {
         credentials: 'include'
     }).then(response => {
         console.log('[Auth] Server logout response:', response.status);
-        // THEN clear client-side storage AFTER server response
+        // Check if logout was successful
+        if (!response.ok) {
+            console.warn('[Auth] Server logout returned status:', response.status);
+        }
+        // Clear client-side storage regardless of server response
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
+        localStorage.removeItem('sessionVerified');
         sessionStorage.clear();
         // Redirect to login page
         redirectToLogin();
@@ -132,6 +137,7 @@ function logout() {
         // Still clear local storage and redirect even if logout fails
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
+        localStorage.removeItem('sessionVerified');
         sessionStorage.clear();
         redirectToLogin();
     });

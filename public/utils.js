@@ -73,6 +73,7 @@ export async function handleApiResponse(response) {
     if (response.status === 401) {
         localStorage.removeItem('authToken');
         localStorage.removeItem('userData');
+        localStorage.removeItem('sessionVerified');
         window.location.href = '/index.php';
         return null;
     }
